@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->filesView->setModel(fileModel);
 //    ui->filesView->verticalHeader()->hide();
-    ui->filesView->horizontalHeader()->hide();
+//    ui->filesView->horizontalHeader()->hide();
     ui->filesView->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->filesView->setSelectionMode(QAbstractItemView::SelectionMode::ExtendedSelection);
 
