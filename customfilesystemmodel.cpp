@@ -12,12 +12,12 @@ CustomFileSystemModel::CustomFileSystemModel(QObject *parent)
 
 void CustomFileSystemModel::enterFolder(const QModelIndex &index)
 {
-    qDebug() << "EnterFolder called.\n";
     QFileInfo tempFileInfo = fileInfo(index);
     QString absolutePath = tempFileInfo.absoluteFilePath();
+    qDebug() << "EnterFolder called." << absolutePath << '\n';
 
     if (tempFileInfo.isDir())
     {
-        emit folderChanged(absolutePath);
+        emit folderDoubleClicked(absolutePath);
     }
 }

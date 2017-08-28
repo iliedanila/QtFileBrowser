@@ -11,7 +11,7 @@ public:
     explicit CustomFileSystemModel(QObject *parent = Q_NULLPTR);
 
 signals:
-    void folderChanged(const QString& newFolder);
+    void folderDoubleClicked(const QString& newFolder);
 
 public slots:
     void enterFolder(const QModelIndex& index);

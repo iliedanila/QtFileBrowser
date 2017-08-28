@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QItemSelection>
 #include "customfilesystemmodel.h"
 
 namespace Ui {
@@ -20,6 +21,7 @@ public:
 private slots:
     void setNewFolder(const QString& newFolder);
     void setHome();
+    void handleSelectionChanged(QItemSelection,QItemSelection);
 
 private:
     Ui::MainWindow *ui;
