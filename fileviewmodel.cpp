@@ -12,25 +12,27 @@ FileViewModel::FileViewModel(QObject* parent)
 void FileViewModel::addFilesInFolder(const QString &folder)
 {
     qDebug() << "addFilesInFolder " << folder << '\n';
-    QDirIterator dirIterator(folder, QDir::Files, QDirIterator::Subdirectories);
-
-    while (dirIterator.hasNext())
-    {
-        QFileInfo fileInfo(dirIterator.next());
-        files.push_back(fileInfo.fileName());
-    }
+    emit layoutAboutToBeChanged();
+    QDir dir(folder);
+    dir.setFilter(QDir::Files | QDir::NoSymLinks);
+    auto fileInfoList = dir.entryInfoList(QStringList());
+    files.append(fileInfoList);
+    emit layoutChanged();
 }
 
 void FileViewModel::removeFilesInFolder(const QString &folder)
 {
     qDebug() << "removeFilesInFolder " << folder << '\n';
-    QDirIterator dirIterator(folder, QDir::Files, QDirIterator::Subdirectories);
+    emit layoutAboutToBeChanged();
+    QDir dir(folder);
+    dir.setFilter(QDir::Files | QDir::NoSymLinks);
+    auto fileInfoList = dir.entryInfoList(QStringList());
 
-    while (dirIterator.hasNext())
+    for(auto& fileInfo : fileInfoList)
     {
-        QFileInfo fileInfo(dirIterator.next());
-        files.removeAt(files.indexOf(fileInfo.fileName()));
+        files.removeAt(files.indexOf(fileInfo));
     }
+    emit layoutChanged();
 }
 
 QModelIndex FileViewModel::index(int row, int column, const QModelIndex &parent) const
@@ -55,5 +57,5 @@ int FileViewModel::columnCount(const QModelIndex &parent) const
 
 QVariant FileViewModel::data(const QModelIndex &index, int role) const
 {
-    return files.at(index.row());
+    return files.at(index.row()).fileName();
 }

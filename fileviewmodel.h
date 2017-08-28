@@ -3,7 +3,7 @@
 
 #include "qabstractitemmodel.h"
 #include <QList>
-
+#include <QFileInfo>
 
 class FileViewModel : public QAbstractItemModel
 {
@@ -22,7 +22,7 @@ public:
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
 private:
-    QList<QString> files;
+    QFileInfoList files;
 };
 
 #endif // FILEVIEWMODEL_H
