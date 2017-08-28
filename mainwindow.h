@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QItemSelection>
 #include "customfilesystemmodel.h"
+#include "fileviewmodel.h"
 
 namespace Ui {
 class MainWindow;
@@ -25,7 +26,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    CustomFileSystemModel* model;
+    CustomFileSystemModel* folderModel;
+    FileViewModel* fileModel;
 };
 
 #endif // MAINWINDOW_H
