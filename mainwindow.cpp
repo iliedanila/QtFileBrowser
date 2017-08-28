@@ -23,6 +23,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->currentPath->setText("");
 
     ui->filesView->setModel(fileModel);
+//    ui->filesView->verticalHeader()->hide();
+    ui->filesView->horizontalHeader()->hide();
+    ui->filesView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->filesView->setSelectionMode(QAbstractItemView::SelectionMode::ExtendedSelection);
 
     connect(ui->folderView, SIGNAL(doubleClicked(const QModelIndex&)), folderModel, SLOT(enterFolder(const QModelIndex&)));
     connect(folderModel, SIGNAL(folderDoubleClicked(const QString&)), this, SLOT(setNewFolder(const QString&)));
