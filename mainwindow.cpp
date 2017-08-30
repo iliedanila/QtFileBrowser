@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "customfilesystemmodel.h"
+#include "folderViewModel.h"
 #include "qdesktopservices.h"
 #include <QDebug>
 
@@ -11,22 +11,22 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     folderModel = new CustomFileSystemModel(this);
-    QString path = QStandardPaths::displayName(QStandardPaths::HomeLocation);
-    folderModel->setRootPath(path);
-    folderModel->setFilter(QDir::NoDot | QDir::AllDirs /*| QDir::Files*/);
+    folderModel->setRootPath("");
+    folderModel->setFilter(QDir::NoDot | QDir::AllDirs);
 
     fileModel = new FileViewModel(this);
 
     ui->folderView->setModel(folderModel);
     ui->folderView->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->folderView->setSelectionMode(QAbstractItemView::SelectionMode::ExtendedSelection);
-    ui->currentPath->setText("");
+    ui->folderView->horizontalHeader()->setStretchLastSection(true);
 
     ui->filesView->setModel(fileModel);
-//    ui->filesView->verticalHeader()->hide();
-//    ui->filesView->horizontalHeader()->hide();
     ui->filesView->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->filesView->setSelectionMode(QAbstractItemView::SelectionMode::ExtendedSelection);
+    ui->filesView->horizontalHeader()->setStretchLastSection(true);
+
+    ui->currentPath->setText("");
 
     connect(ui->folderView, SIGNAL(doubleClicked(const QModelIndex&)), folderModel, SLOT(enterFolder(const QModelIndex&)));
     connect(folderModel, SIGNAL(folderDoubleClicked(const QString&)), this, SLOT(setNewFolder(const QString&)));
@@ -58,9 +58,6 @@ void MainWindow::setHome()
 void MainWindow::handleSelectionChanged(QItemSelection selected, QItemSelection deselected)
 {
     qDebug() << "handleSelectionChanged\n";
-
-    QList<QString> added;
-    QList<QString> removed;
 
     for (auto& index : selected.indexes())
     {

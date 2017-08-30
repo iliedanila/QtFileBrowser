@@ -3,8 +3,8 @@
 
 #include <QMainWindow>
 #include <QItemSelection>
-#include "customfilesystemmodel.h"
-#include "fileviewmodel.h"
+#include "folderViewModel.h"
+#include "fileViewModel.h"
 
 namespace Ui {
 class MainWindow;

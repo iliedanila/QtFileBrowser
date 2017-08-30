@@ -1,7 +1,7 @@
 #include <QFileSystemModel>
 #include <QDebug>
 
-#include "customfilesystemmodel.h"
+#include "folderViewModel.h"
 
 CustomFileSystemModel::CustomFileSystemModel(QObject *parent)
 :

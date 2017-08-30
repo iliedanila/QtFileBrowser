@@ -1,4 +1,4 @@
-#include "fileviewmodel.h"
+#include "fileViewModel.h"
 #include <QDebug>
 #include <QDirIterator>
 
@@ -52,10 +52,28 @@ int FileViewModel::rowCount(const QModelIndex &parent) const
 
 int FileViewModel::columnCount(const QModelIndex &parent) const
 {
-    return 1;
+    return 2;
 }
 
 QVariant FileViewModel::data(const QModelIndex &index, int role) const
 {
     return files.at(index.row()).fileName();
+}
+
+QVariant FileViewModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (section == 0 && orientation == Qt::Horizontal && role == Qt::DisplayRole)
+    {
+        return "File Name";
+    }
+    else if (section == 0 && orientation == Qt::Horizontal && role == Qt::TextAlignmentRole)
+    {
+        return Qt::AlignHCenter;
+    }
+    return QVariant();
+}
+
+Qt::ItemFlags FileViewModel::flags(const QModelIndex &index) const
+{
+
 }

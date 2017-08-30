@@ -26,13 +26,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-        customfilesystemmodel.cpp \
-    fileviewmodel.cpp
+    fileViewModel.cpp \
+    folderViewModel.cpp
 
 HEADERS += \
         mainwindow.h \
-        customfilesystemmodel.h \
-    fileviewmodel.h
+    folderViewModel.h \
+    fileViewModel.h
 
 FORMS += \
         mainwindow.ui
