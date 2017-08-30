@@ -3,6 +3,7 @@
 #include "folderViewModel.h"
 #include "qdesktopservices.h"
 #include <QDebug>
+#include "qstandardpaths.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -11,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     folderModel = new CustomFileSystemModel(this);
-    folderModel->setRootPath("");
+    folderModel->setRootPath(QDir::homePath());
     folderModel->setFilter(QDir::NoDot | QDir::AllDirs);
 
     fileModel = new FileViewModel(this);
@@ -26,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->filesView->setSelectionMode(QAbstractItemView::SelectionMode::ExtendedSelection);
     ui->filesView->horizontalHeader()->setStretchLastSection(true);
 
-    ui->currentPath->setText("");
+    ui->currentPath->setText(QDir::homePath());
 
     connect(ui->folderView, SIGNAL(doubleClicked(const QModelIndex&)), folderModel, SLOT(enterFolder(const QModelIndex&)));
     connect(folderModel, SIGNAL(folderDoubleClicked(const QString&)), this, SLOT(setNewFolder(const QString&)));
@@ -51,7 +52,7 @@ void MainWindow::setNewFolder(const QString &newFolder)
 
 void MainWindow::setHome()
 {
-    ui->folderView->setRootIndex(folderModel->setRootPath(""));
+    ui->folderView->setRootIndex(folderModel->setRootPath(QDir::homePath()));
     ui->currentPath->setText(folderModel->rootPath());
 }
 

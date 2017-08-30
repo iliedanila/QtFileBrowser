@@ -1,10 +1,11 @@
 #include "fileViewModel.h"
 #include <QDebug>
 #include <QDirIterator>
+#include <QFileIconProvider>
 
 FileViewModel::FileViewModel(QObject* parent)
 :
-       QAbstractItemModel(parent)
+       QAbstractTableModel(parent)
 {
 
 }
@@ -57,23 +58,47 @@ int FileViewModel::columnCount(const QModelIndex &parent) const
 
 QVariant FileViewModel::data(const QModelIndex &index, int role) const
 {
-    return files.at(index.row()).fileName();
+    switch (index.column())
+    {
+    case 0:
+        {
+            return fileIconProvider.icon(files.at(index.row()));
+        }
+    case 1:
+        {
+            return files.at(index.row()).fileName();
+        }
+    }
 }
 
 QVariant FileViewModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (section == 0 && orientation == Qt::Horizontal && role == Qt::DisplayRole)
+    if (orientation == Qt::Horizontal)
     {
-        return "File Name";
-    }
-    else if (section == 0 && orientation == Qt::Horizontal && role == Qt::TextAlignmentRole)
-    {
-        return Qt::AlignHCenter;
+        if (role == Qt::TextAlignmentRole)
+        {
+            return Qt::AlignHCenter;
+        }
+        else if (role == Qt::DisplayRole)
+        {
+            if (section == 0)
+            {
+                return "Icon";
+            }
+            else if (section == 1)
+            {
+                return "File Name";
+            }
+        }
     }
     return QVariant();
 }
 
-Qt::ItemFlags FileViewModel::flags(const QModelIndex &index) const
+Qt::ItemFlags FileViewModel::flags(const QModelIndex& index) const
 {
+    if (!index.isValid())
+        return QAbstractTableModel::flags(index) | Qt::ItemIsDropEnabled;
+
+    return QAbstractTableModel::flags(index) | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
 
 }
