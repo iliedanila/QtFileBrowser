@@ -99,6 +99,6 @@ Qt::ItemFlags FileViewModel::flags(const QModelIndex& index) const
     if (!index.isValid())
         return QAbstractTableModel::flags(index) | Qt::ItemIsDropEnabled;
 
-    return QAbstractTableModel::flags(index) | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
+    return  QAbstractTableModel::flags(index) | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
 
 }
