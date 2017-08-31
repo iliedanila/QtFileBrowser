@@ -23,6 +23,7 @@ private slots:
     void setNewFolder(const QString& newFolder);
     void setHome();
     void handleSelectionChanged(QItemSelection,QItemSelection);
+    void handleFileModelLayoutChanged(QList<QPersistentModelIndex>, QAbstractItemModel::LayoutChangeHint);
 
 private:
     Ui::MainWindow *ui;

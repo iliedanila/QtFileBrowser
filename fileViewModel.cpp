@@ -5,7 +5,8 @@
 
 FileViewModel::FileViewModel(QObject* parent)
 :
-       QAbstractTableModel(parent)
+       QAbstractTableModel(parent),
+       columnsCount(2)
 {
 
 }
@@ -53,7 +54,7 @@ int FileViewModel::rowCount(const QModelIndex &/*parent*/) const
 
 int FileViewModel::columnCount(const QModelIndex &/*parent*/) const
 {
-    return 2;
+    return columnsCount;
 }
 
 QVariant FileViewModel::data(const QModelIndex &index, int role) const
@@ -126,4 +127,18 @@ Qt::ItemFlags FileViewModel::flags(const QModelIndex& index) const
 
     return  QAbstractTableModel::flags(index) | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
 
+}
+
+void FileViewModel::changeLayout()
+{
+    emit layoutAboutToBeChanged();
+    if (columnsCount == 2)
+    {
+        columnsCount = 3;
+    }
+    else
+    {
+        columnsCount = 2;
+    }
+    emit layoutChanged();
 }

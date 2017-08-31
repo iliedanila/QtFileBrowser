@@ -12,7 +12,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     folderModel = new CustomFileSystemModel(this);
-    folderModel->setRootPath(QDir::homePath());
     folderModel->setFilter(QDir::NoDot | QDir::AllDirs);
 
     fileModel = new FileViewModel(this);
@@ -21,11 +20,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->folderView->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->folderView->setSelectionMode(QAbstractItemView::SelectionMode::ExtendedSelection);
     ui->folderView->horizontalHeader()->setStretchLastSection(true);
+    ui->folderView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+    ui->folderView->setRootIndex(folderModel->setRootPath(QDir::homePath()));
 
     ui->filesView->setModel(fileModel);
     ui->filesView->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->filesView->setSelectionMode(QAbstractItemView::SelectionMode::ExtendedSelection);
     ui->filesView->horizontalHeader()->setStretchLastSection(true);
+    ui->filesView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     ui->currentPath->setText(QDir::homePath());
 
@@ -38,6 +41,12 @@ MainWindow::MainWindow(QWidget *parent) :
         SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
         this,
         SLOT(handleSelectionChanged(QItemSelection,QItemSelection)));
+    connect(
+        fileModel,
+        SIGNAL(layoutChanged(QList<QPersistentModelIndex>, QAbstractItemModel::LayoutChangeHint)),
+        this,
+        SLOT(handleFileModelLayoutChanged(QList<QPersistentModelIndex>, QAbstractItemModel::LayoutChangeHint)));
+    connect(ui->changeLayout, SIGNAL(released()), fileModel, SLOT(changeLayout()));
 }
 
 MainWindow::~MainWindow()
@@ -77,4 +86,10 @@ void MainWindow::handleSelectionChanged(QItemSelection selected, QItemSelection 
             fileModel->removeFilesInFolder(fileInfo.absoluteFilePath());
         }
     }
+}
+
+void MainWindow::handleFileModelLayoutChanged(QList<QPersistentModelIndex>, QAbstractItemModel::LayoutChangeHint)
+{
+    ui->filesView->horizontalHeader()->setStretchLastSection(true);
+    ui->filesView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }

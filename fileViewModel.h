@@ -24,9 +24,13 @@ public:
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
     virtual Qt::ItemFlags flags(const QModelIndex & index) const override ;
 
+public slots:
+    void changeLayout();
+
 private:
     QFileInfoList files;
     QFileIconProvider fileIconProvider;
+    qint32 columnsCount;
 };
 
 #endif // FILEVIEWMODEL_H
