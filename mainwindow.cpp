@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     folderModel = new CustomFileSystemModel(this);
-    folderModel->setFilter(QDir::NoDot | QDir::AllDirs);
+    folderModel->setFilter(QDir::NoDot | QDir::AllDirs );
 
     fileModel = new FileViewModel(this);
 
@@ -21,8 +21,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->folderView->setSelectionMode(QAbstractItemView::SelectionMode::ExtendedSelection);
     ui->folderView->horizontalHeader()->setStretchLastSection(true);
     ui->folderView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->folderView->verticalHeader()->hide();
 
     ui->folderView->setRootIndex(folderModel->setRootPath(QDir::homePath()));
+
+    ui->showHidden->setChecked(false);
 
     ui->filesView->setModel(fileModel);
     ui->filesView->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -47,6 +50,7 @@ MainWindow::MainWindow(QWidget *parent) :
         this,
         SLOT(handleFileModelLayoutChanged(QList<QPersistentModelIndex>, QAbstractItemModel::LayoutChangeHint)));
     connect(ui->changeLayout, SIGNAL(released()), fileModel, SLOT(changeLayout()));
+    connect(ui->showHidden, SIGNAL(clicked(bool)), this, SLOT(handleShowHidden(bool)));
 }
 
 MainWindow::~MainWindow()
@@ -61,7 +65,7 @@ void MainWindow::setNewFolder(const QString &newFolder)
 
 void MainWindow::setHome()
 {
-    ui->folderView->setRootIndex(folderModel->setRootPath(QDir::homePath()));
+    ui->folderView->setRootIndex(folderModel->setRootPath(""));
     ui->currentPath->setText(folderModel->rootPath());
 }
 
@@ -92,4 +96,18 @@ void MainWindow::handleFileModelLayoutChanged(QList<QPersistentModelIndex>, QAbs
 {
     ui->filesView->horizontalHeader()->setStretchLastSection(true);
     ui->filesView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+}
+
+void MainWindow::handleShowHidden(bool showHidden)
+{
+    auto filter = folderModel->filter();
+    if (showHidden)
+    {
+        filter |= (QDir::Hidden | QDir::System);
+    }
+    else
+    {
+        filter &= ~(QDir::Hidden | QDir::System);
+    }
+    folderModel->setFilter(filter);
 }

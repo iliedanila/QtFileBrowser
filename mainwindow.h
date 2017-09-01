@@ -24,6 +24,7 @@ private slots:
     void setHome();
     void handleSelectionChanged(QItemSelection,QItemSelection);
     void handleFileModelLayoutChanged(QList<QPersistentModelIndex>, QAbstractItemModel::LayoutChangeHint);
+    void handleShowHidden(bool);
 
 private:
     Ui::MainWindow *ui;

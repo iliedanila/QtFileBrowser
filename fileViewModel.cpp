@@ -115,6 +115,10 @@ QVariant FileViewModel::headerData(int section, Qt::Orientation orientation, int
             {
                 return "File Name";
             }
+            else if (section == 2)
+            {
+                return "Custom column";
+            }
         }
     }
     return QVariant();
