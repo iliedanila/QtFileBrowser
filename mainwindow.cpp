@@ -100,6 +100,7 @@ void MainWindow::handleFileModelLayoutChanged(QList<QPersistentModelIndex>, QAbs
 
 void MainWindow::handleShowHidden(bool showHidden)
 {
+    auto root = folderModel->rootPath();
     auto filter = folderModel->filter();
     if (showHidden)
     {
@@ -110,4 +111,5 @@ void MainWindow::handleShowHidden(bool showHidden)
         filter &= ~(QDir::Hidden | QDir::System);
     }
     folderModel->setFilter(filter);
+    ui->folderView->setRootIndex(folderModel->setRootPath(root));
 }
