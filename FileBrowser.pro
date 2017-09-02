@@ -28,14 +28,17 @@ SOURCES += \
         mainwindow.cpp \
     filesystemview.cpp \
     browserwidget.cpp \
-    filesystemmodel.cpp
+    filesystemmodel.cpp \
+    drivelist.cpp
 
 HEADERS += \
         mainwindow.h \
     filesystemview.h \
     browserwidget.h \
-    filesystemmodel.h
+    filesystemmodel.h \
+    drivelist.h
 
 FORMS += \
         mainwindow.ui \
-    browserWidget.ui
+    browserWidget.ui \
+    drivelist.ui

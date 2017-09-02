@@ -6,14 +6,24 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>487</width>
+    <height>376</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="DriveList" name="widget" native="true"/>
+   </item>
+   <item>
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
    <item>
     <widget class="FileSystemView" name="fileSystemView"/>
    </item>
@@ -24,6 +34,12 @@
    <class>FileSystemView</class>
    <extends>QTableView</extends>
    <header>filesystemview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>DriveList</class>
+   <extends>QWidget</extends>
+   <header>drivelist.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>
