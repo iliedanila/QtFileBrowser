@@ -51,6 +51,16 @@ void BrowserWidget::Connect()
             SIGNAL(switchMe()),
             this,
             SLOT(handleSwitchMeRequest()));
+
+    connect(ui->fileSystemView,
+            SIGNAL(gotFocus()),
+            this,
+            SLOT(handleGotFocus()));
+
+    connect(ui->fileSystemView,
+            SIGNAL(goToParent()),
+            this,
+            SLOT(goToParent()));
 }
 
 void BrowserWidget::enterFolder(QModelIndex index)
@@ -74,4 +84,18 @@ void BrowserWidget::handleRootPathChanged(QString newPath)
 void BrowserWidget::handleSwitchMeRequest()
 {
     emit switchMe();
+}
+
+void BrowserWidget::handleGotFocus()
+{
+    emit rootPathChanged(fileSystemModel->rootPath());
+}
+
+void BrowserWidget::goToParent()
+{
+    QDir currentDir(fileSystemModel->rootPath());
+    if (currentDir.cdUp())
+    {
+        ui->fileSystemView->setRootIndex(fileSystemModel->setRootPath(currentDir.path()));
+    }
 }

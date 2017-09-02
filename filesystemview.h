@@ -12,9 +12,12 @@ public:
 
 protected:
     virtual void keyPressEvent(QKeyEvent *event) override;
+    virtual void focusInEvent(QFocusEvent *event) override;
 
 signals:
     void switchMe();
+    void gotFocus();
+    void goToParent();
 };
 
 #endif // FILESYSTEMVIEW_H

@@ -29,6 +29,8 @@ private slots:
     void enterFolder(QModelIndex);
     void handleRootPathChanged(QString);
     void handleSwitchMeRequest();
+    void handleGotFocus();
+    void goToParent();
 
 private:
     Ui::BrowserWidget *ui;
