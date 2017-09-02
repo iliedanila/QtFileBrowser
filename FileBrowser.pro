@@ -8,7 +8,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = fileSystem
+TARGET = FileBrowser
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -27,12 +27,14 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     browserWidget.cpp \
-    fileSystemModel.cpp
+    fileSystemModel.cpp \
+    filesystemview.cpp
 
 HEADERS += \
         mainwindow.h \
     browserWidget.h \
-    fileSystemModel.h
+    fileSystemModel.h \
+    filesystemview.h
 
 FORMS += \
         mainwindow.ui \

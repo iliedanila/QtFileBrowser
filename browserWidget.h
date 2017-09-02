@@ -21,8 +21,14 @@ private:
     void CustomizeUI();
     void Connect();
 
+signals:
+    void rootPathChanged(QString);
+    void switchMe();
+
 private slots:
     void enterFolder(QModelIndex);
+    void handleRootPathChanged(QString);
+    void handleSwitchMeRequest();
 
 private:
     Ui::BrowserWidget *ui;

@@ -1,6 +1,9 @@
 #include "browserWidget.h"
 #include "ui_browserWidget.h"
 
+#include <QDebug>
+#include <QDir>
+
 BrowserWidget::BrowserWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::BrowserWidget)
@@ -21,13 +24,15 @@ void BrowserWidget::CustomizeUI()
 {
     fileSystemModel->setFilter(QDir::AllDirs | QDir::NoDot | QDir::Dirs | QDir::Files);
     ui->fileSystemView->setModel(fileSystemModel);
-    ui->fileSystemView->setRootIndex(fileSystemModel->setRootPath(""));
+    ui->fileSystemView->setRootIndex(fileSystemModel->setRootPath(QDir::homePath()));
     ui->fileSystemView->verticalHeader()->hide();
     ui->fileSystemView->horizontalHeader()->setStretchLastSection(true);
     ui->fileSystemView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     ui->fileSystemView->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->fileSystemView->setSelectionMode(QAbstractItemView::ExtendedSelection);
+
+    setFocusProxy(ui->fileSystemView);
 }
 
 void BrowserWidget::Connect()
@@ -36,14 +41,37 @@ void BrowserWidget::Connect()
             SIGNAL(doubleClicked(QModelIndex)),
             this,
             SLOT(enterFolder(QModelIndex)));
+
+    connect(fileSystemModel,
+            SIGNAL(rootPathChanged(QString)),
+            this,
+            SLOT(handleRootPathChanged(QString)));
+
+    connect(ui->fileSystemView,
+            SIGNAL(switchMe()),
+            this,
+            SLOT(handleSwitchMeRequest()));
 }
 
 void BrowserWidget::enterFolder(QModelIndex index)
 {
     auto fileInfo = fileSystemModel->fileInfo(index);
-    ui->fileSystemView->setRootIndex(fileSystemModel->setRootPath(fileInfo.absoluteFilePath()));
+    if (fileInfo.absoluteFilePath() != "/..")
+    {
+        ui->fileSystemView->setRootIndex(fileSystemModel->setRootPath(fileInfo.absoluteFilePath()));
+    }
+    else
+    {
+        ui->fileSystemView->setRootIndex(fileSystemModel->setRootPath(""));
+    }
+}
 
-    // Set selected item ".." from the new view.
-    auto newIndex = fileSystemModel->index(0, 0);
-    ui->fileSystemView->selectionModel()->select(newIndex, QItemSelectionModel::Select);
+void BrowserWidget::handleRootPathChanged(QString newPath)
+{
+    emit rootPathChanged(newPath);
+}
+
+void BrowserWidget::handleSwitchMeRequest()
+{
+    emit switchMe();
 }

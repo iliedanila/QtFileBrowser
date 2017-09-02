@@ -16,6 +16,16 @@ public:
     ~MainWindow();
 
 private:
+    void CustomizeUI();
+    void Connect();
+
+private slots:
+    void handleRootPathChanged(QString);
+    void switchToLeftBrowser();
+    void switchToRightBrowser();
+
+
+private:
     Ui::MainWindow *ui;
 };
 

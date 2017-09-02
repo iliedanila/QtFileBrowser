@@ -1,0 +1,20 @@
+#ifndef FILESYSTEMVIEW_H
+#define FILESYSTEMVIEW_H
+
+#include <QTableView>
+
+class FileSystemView : public QTableView
+{
+    Q_OBJECT
+
+public:
+    explicit FileSystemView(QWidget *parent = Q_NULLPTR);
+
+protected:
+    virtual void keyPressEvent(QKeyEvent *event) override;
+
+signals:
+    void switchMe();
+};
+
+#endif // FILESYSTEMVIEW_H
