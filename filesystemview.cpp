@@ -32,13 +32,13 @@ void FileSystemView::keyPressEvent(QKeyEvent *event)
 
 void FileSystemView::focusInEvent(QFocusEvent *event)
 {
-    emit gotFocus();
-    QTableView::focusInEvent(event);
-
-    if (!selectionModel()->currentIndex().isValid())
+    auto selection = selectionModel()->selection();
+    if (selection.count() == 0)
     {
         selectionModel()->setCurrentIndex(model()->index(0, 0), QItemSelectionModel::SelectCurrent);
-        selectionModel()->select(model()->index(0, 0), QItemSelectionModel::SelectCurrent);
-        selectRow(0);
+        selectionModel()->select(model()->index(0, 0), QItemSelectionModel::ClearAndSelect);
     }
+
+    QTableView::focusInEvent(event);
+    emit gotFocus();
 }
