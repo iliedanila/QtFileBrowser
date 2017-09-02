@@ -32,6 +32,7 @@ private slots:
     void handleSwitchMeRequest();
     void handleGotFocus();
     void goToParent();
+    void setHome();
 
 private:
     Ui::BrowserWidget *ui;

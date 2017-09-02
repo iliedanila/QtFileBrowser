@@ -16,6 +16,16 @@ public:
     ~DriveList();
 
 private:
+    void CustomizeUI();
+    void Connect();
+
+signals:
+    void setHome();
+
+private slots:
+    void handleSetHome();
+
+private:
     Ui::DriveList *ui;
 };
 

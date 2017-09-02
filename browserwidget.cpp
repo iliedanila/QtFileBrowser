@@ -63,6 +63,11 @@ void BrowserWidget::Connect()
             SIGNAL(goToParent()),
             this,
             SLOT(goToParent()));
+
+    connect(ui->driveList,
+            SIGNAL(setHome()),
+            this,
+            SLOT(setHome()));
 }
 
 void BrowserWidget::SelectFirstRow(bool directoryChanged)
@@ -111,4 +116,9 @@ void BrowserWidget::goToParent()
     {
         ui->fileSystemView->setRootIndex(fileSystemModel->setRootPath(currentDir.path()));
     }
+}
+
+void BrowserWidget::setHome()
+{
+    ui->fileSystemView->setRootIndex(fileSystemModel->setRootPath(""));
 }

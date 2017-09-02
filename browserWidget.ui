@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="DriveList" name="widget" native="true"/>
+    <widget class="DriveList" name="driveList" native="true"/>
    </item>
    <item>
     <widget class="Line" name="line">
