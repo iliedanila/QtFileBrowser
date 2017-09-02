@@ -36,7 +36,7 @@ void FileSystemView::focusInEvent(QFocusEvent *event)
     if (selection.count() == 0)
     {
         selectionModel()->setCurrentIndex(model()->index(0, 0), QItemSelectionModel::SelectCurrent);
-        selectionModel()->select(model()->index(0, 0), QItemSelectionModel::ClearAndSelect);
+        selectionModel()->select(model()->index(0, 0), QItemSelectionModel::SelectCurrent);
     }
 
     QTableView::focusInEvent(event);
