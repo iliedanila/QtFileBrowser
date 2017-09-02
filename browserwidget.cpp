@@ -32,6 +32,8 @@ void BrowserWidget::CustomizeUI()
     ui->fileSystemView->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->fileSystemView->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
+    ui->fileSystemView->setShowGrid(false);
+
     setFocusProxy(ui->fileSystemView);
 }
 
@@ -63,6 +65,15 @@ void BrowserWidget::Connect()
             SLOT(goToParent()));
 }
 
+void BrowserWidget::SelectFirstRow(bool directoryChanged)
+{
+    if (ui->fileSystemView->selectionModel()->selectedRows().count() == 0 ||
+        directoryChanged)
+    {
+        ui->fileSystemView->selectRow(0);
+    }
+}
+
 void BrowserWidget::enterFolder(QModelIndex index)
 {
     auto fileInfo = fileSystemModel->fileInfo(index);
@@ -79,6 +90,7 @@ void BrowserWidget::enterFolder(QModelIndex index)
 void BrowserWidget::handleRootPathChanged(QString newPath)
 {
     emit rootPathChanged(newPath);
+    SelectFirstRow(true);
 }
 
 void BrowserWidget::handleSwitchMeRequest()
@@ -89,6 +101,7 @@ void BrowserWidget::handleSwitchMeRequest()
 void BrowserWidget::handleGotFocus()
 {
     emit rootPathChanged(fileSystemModel->rootPath());
+    SelectFirstRow(false);
 }
 
 void BrowserWidget::goToParent()

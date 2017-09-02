@@ -20,6 +20,7 @@ public:
 private:
     void CustomizeUI();
     void Connect();
+    void SelectFirstRow(bool directoryChanged);
 
 signals:
     void rootPathChanged(QString);
