@@ -1,4 +1,4 @@
-#include "browserWidget.h"
+#include "browserwidget.h"
 #include "ui_browserWidget.h"
 
 #include <QDebug>

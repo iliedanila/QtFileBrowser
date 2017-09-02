@@ -26,15 +26,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    browserWidget.cpp \
-    fileSystemModel.cpp \
-    filesystemview.cpp
+    filesystemview.cpp \
+    browserwidget.cpp \
+    filesystemmodel.cpp
 
 HEADERS += \
         mainwindow.h \
-    browserWidget.h \
-    fileSystemModel.h \
-    filesystemview.h
+    filesystemview.h \
+    browserwidget.h \
+    filesystemmodel.h
 
 FORMS += \
         mainwindow.ui \

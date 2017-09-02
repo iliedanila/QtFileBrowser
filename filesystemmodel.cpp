@@ -1,4 +1,4 @@
-#include "fileSystemModel.h"
+#include "filesystemmodel.h"
 
 FileSystemModel::FileSystemModel(QObject *parent)
 :

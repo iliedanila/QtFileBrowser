@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QFileSystemWatcher>
-#include "fileSystemModel.h"
+#include "filesystemmodel.h"
 
 namespace Ui {
 class BrowserWidget;

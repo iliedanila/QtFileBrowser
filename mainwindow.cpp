@@ -57,12 +57,10 @@ void MainWindow::handleRootPathChanged(QString newPath)
 void MainWindow::switchToLeftBrowser()
 {
     ui->leftBrowser->setFocus();
-    ui->leftBrowser->activateWindow();
 }
 
 void MainWindow::switchToRightBrowser()
 {
     ui->rightBrowser->setFocus();
-    ui->rightBrowser->activateWindow();
 }
 
