@@ -2,6 +2,8 @@
 #define DRIVELIST_H
 
 #include <QWidget>
+#include <QToolButton>
+#include <QFileIconProvider>
 
 namespace Ui {
 class DriveList;
@@ -27,6 +29,8 @@ private slots:
 
 private:
     Ui::DriveList *ui;
+    QFileIconProvider iconProvider;
+    QList<QToolButton*> buttonList;
 };
 
 #endif // DRIVELIST_H
