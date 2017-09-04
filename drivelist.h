@@ -5,6 +5,7 @@
 #include <QToolButton>
 #include <QFileIconProvider>
 #include <QTimer>
+#include <QSignalMapper>
 
 namespace Ui {
 class DriveList;
@@ -24,17 +25,20 @@ private:
     void CreateButtonsForDrives();
 
 signals:
-    void setHome();
+    void setPath(QString);
+    void pathNotAvailable(QString);
 
 private slots:
     void handleSetHome();
     void onTimer();
+    void buttonClicked(QString);
 
 private:
     Ui::DriveList *ui;
     QFileIconProvider iconProvider;
     QList<QToolButton*> buttonList;
     QTimer* timer;
+    QSignalMapper* signalMapper;
 };
 
 #endif // DRIVELIST_H

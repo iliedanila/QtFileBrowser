@@ -65,9 +65,13 @@ void BrowserWidget::Connect()
             SLOT(goToParent()));
 
     connect(ui->driveList,
-            SIGNAL(setHome()),
+            SIGNAL(setPath(QString)),
             this,
-            SLOT(setHome()));
+            SLOT(setPath(QString)));
+    connect(ui->driveList,
+            SIGNAL(pathNotAvailable(QString)),
+            this,
+            SLOT(pathNotAvailable(QString)));
 }
 
 void BrowserWidget::SelectFirstRow(bool directoryChanged)
@@ -118,7 +122,15 @@ void BrowserWidget::goToParent()
     }
 }
 
-void BrowserWidget::setHome()
+void BrowserWidget::setPath(QString path)
 {
-    ui->fileSystemView->setRootIndex(fileSystemModel->setRootPath(""));
+    ui->fileSystemView->setRootIndex(fileSystemModel->setRootPath(path));
+}
+
+void BrowserWidget::pathNotAvailable(QString /*path*/)
+{
+    if (!QDir(fileSystemModel->rootPath()).exists())
+    {
+        ui->fileSystemView->setRootIndex(fileSystemModel->setRootPath(QDir::homePath()));
+    }
 }

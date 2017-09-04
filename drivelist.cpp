@@ -12,6 +12,8 @@ DriveList::DriveList(QWidget *parent) :
     ui->setupUi(this);
 
     timer = new QTimer(this);
+    signalMapper = new QSignalMapper(this);
+
     CustomizeUI();
     Connect();
 
@@ -49,8 +51,12 @@ void DriveList::CreateButtonsForDrives()
         while(buttonList.count())
         {
             QToolButton* button = *buttonList.begin();
+            disconnect(button, 0, 0, 0);
             ui->horizontalLayout->removeWidget(button);
             buttonList.pop_front();
+
+            signalMapper->removeMappings(button);
+            emit pathNotAvailable(button->text());
             delete button;
         }
 
@@ -66,17 +72,27 @@ void DriveList::CreateButtonsForDrives()
             button->setIcon(icon);
             buttonList.push_back(button);
 
+            connect(button, SIGNAL(released()), signalMapper, SLOT(map()));
+            signalMapper->setMapping(button, buttonText);
+
             ui->horizontalLayout->addWidget(button);
         }
+
+        connect(signalMapper, SIGNAL(mapped(QString)), this, SLOT(buttonClicked(QString)));
     }
 }
 
 void DriveList::handleSetHome()
 {
-    emit setHome();
+    emit setPath("");
 }
 
 void DriveList::onTimer()
 {
     CreateButtonsForDrives();
+}
+
+void DriveList::buttonClicked(QString path)
+{
+    emit setPath(path);
 }
