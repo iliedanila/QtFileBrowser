@@ -9,6 +9,8 @@ class FileSystemModel : public QFileSystemModel
 
 public:
     FileSystemModel(QObject *parent = Q_NULLPTR);
+
+    virtual Qt::ItemFlags flags(const QModelIndex& index) const override;
 };
 
 #endif // FILESYSTEMMODEL_H
