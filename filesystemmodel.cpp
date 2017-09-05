@@ -16,3 +16,8 @@ Qt::ItemFlags FileSystemModel::flags(const QModelIndex &index) const
 
     return defaultFlags | Qt::ItemIsEditable | Qt::ItemIsDragEnabled /*| Qt::ItemIsDropEnabled*/;
 }
+
+Qt::DropActions FileSystemModel::supportedDropActions() const
+{
+    return /*Qt::CopyAction |*/ Qt::MoveAction;
+}

@@ -23,16 +23,22 @@ BrowserWidget::~BrowserWidget()
 void BrowserWidget::CustomizeUI()
 {
     fileSystemModel->setFilter(QDir::AllDirs | QDir::NoDot | QDir::Dirs | QDir::Files);
+
     ui->fileSystemView->setModel(fileSystemModel);
     ui->fileSystemView->setRootIndex(fileSystemModel->setRootPath(QDir::homePath()));
     ui->fileSystemView->verticalHeader()->hide();
-    ui->fileSystemView->horizontalHeader()->setStretchLastSection(true);
-    ui->fileSystemView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     ui->fileSystemView->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->fileSystemView->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    ui->fileSystemView->setDragEnabled(true);
+    ui->fileSystemView->setAcceptDrops(true);
+    ui->fileSystemView->setDropIndicatorShown(true);
+    ui->fileSystemView->setDragDropMode(QAbstractItemView::InternalMove);
 
-    ui->fileSystemView->setShowGrid(false);
+    ui->fileSystemView->horizontalHeader()->setStretchLastSection(true);
+    ui->fileSystemView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+    ui->fileSystemView->setShowGrid(true);
 
     setFocusProxy(ui->fileSystemView);
 }

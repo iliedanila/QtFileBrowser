@@ -11,6 +11,7 @@ public:
     FileSystemModel(QObject *parent = Q_NULLPTR);
 
     virtual Qt::ItemFlags flags(const QModelIndex& index) const override;
+    virtual Qt::DropActions supportedDropActions() const override;
 };
 
 #endif // FILESYSTEMMODEL_H
