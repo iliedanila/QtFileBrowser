@@ -33,7 +33,7 @@ void BrowserWidget::CustomizeUI()
     ui->fileSystemView->setDragEnabled(true);
     ui->fileSystemView->setAcceptDrops(true);
     ui->fileSystemView->setDropIndicatorShown(true);
-    ui->fileSystemView->setDragDropMode(QAbstractItemView::InternalMove);
+    ui->fileSystemView->setDragDropMode(QAbstractItemView::DragDrop);
 
     ui->fileSystemView->horizontalHeader()->setStretchLastSection(true);
     ui->fileSystemView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
