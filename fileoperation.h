@@ -1,14 +1,13 @@
 #ifndef FILEOPERATION_H
 #define FILEOPERATION_H
 
-#include <QObject>
+#include <QThread>
 
-class FileOperation : public QObject
+class FileOperation : public QThread
 {
     Q_OBJECT
 
 public:
-
     enum OperationType
     {
         eView = 0,
@@ -19,10 +18,16 @@ public:
         eDelete
     };
 
-    explicit FileOperation(QObject* parent = Q_NULLPTR);
+    explicit FileOperation(
+            OperationType type,
+            QStringList sourceFiles,
+            QString destination = QString(),
+            QObject* parent = Q_NULLPTR);
 
-public slots:
-    void executeOperation(OperationType type, QString parameter1, QString parameter2 = QString());
+private:
+    OperationType operationType;
+    QStringList sourceFiles;
+    QString destination;
 };
 
 #endif // FILEOPERATION_H

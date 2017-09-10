@@ -20,6 +20,24 @@ BrowserWidget::~BrowserWidget()
     delete ui;
 }
 
+QStringList BrowserWidget::getSelected()
+{
+    QStringList filePaths;
+    for (auto index : ui->fileSystemView->selectionModel()->selection().indexes())
+    {
+        if (index.column() == 0)
+        {
+            filePaths.push_back(fileSystemModel->fileInfo(index).absoluteFilePath());
+        }
+    }
+    return filePaths;
+}
+
+QString BrowserWidget::getRootPath()
+{
+    return fileSystemModel->rootPath();
+}
+
 void BrowserWidget::CustomizeUI()
 {
     fileSystemModel->setFilter(QDir::AllDirs | QDir::NoDot | QDir::Dirs | QDir::Files);

@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "fileoperation.h"
 
 namespace Ui {
     class MainWindow;
@@ -23,6 +24,7 @@ private slots:
     void handleRootPathChanged(QString);
     void switchToLeftBrowser();
     void switchToRightBrowser();
+    void handleCopy();
 
 
 private:

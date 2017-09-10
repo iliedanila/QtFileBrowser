@@ -58,6 +58,9 @@ bool FileSystemModel::dropMimeData(const QMimeData *data,
                                    int column,
                                    const QModelIndex &parent)
 {
+    Q_UNUSED(row);
+    Q_UNUSED(parent);
+
     if (action == Qt::IgnoreAction)
         return true;
     if (!data->hasFormat("application/filePaths"))

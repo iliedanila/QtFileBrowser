@@ -3,7 +3,8 @@
 
 #include <QDir>
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(QWidget *parent)
+    :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
@@ -46,6 +47,11 @@ void MainWindow::Connect()
             this,
             SLOT(switchToLeftBrowser())) != Q_NULLPTR;
 
+    connected &= connect(ui->copyButton,
+            SIGNAL(pressed()),
+            this,
+            SLOT(handleCopy())) != Q_NULLPTR;
+
     Q_ASSERT(connected);
 }
 
@@ -62,5 +68,26 @@ void MainWindow::switchToLeftBrowser()
 void MainWindow::switchToRightBrowser()
 {
     ui->rightBrowser->setFocus();
+}
+
+void MainWindow::handleCopy()
+{
+    QStringList filePaths;
+    QString destination;
+    if (ui->leftBrowser->hasFocus())
+    {
+        filePaths = ui->leftBrowser->getSelected();
+        destination = ui->rightBrowser->getRootPath();
+    }
+    if (ui->rightBrowser->hasFocus())
+    {
+        filePaths = ui->rightBrowser->getSelected();
+        destination = ui->leftBrowser->getRootPath();
+    }
+
+    if (filePaths.count())
+    {
+        // TODO: copy files.
+    }
 }
 

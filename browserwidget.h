@@ -16,6 +16,8 @@ class BrowserWidget : public QWidget
 public:
     explicit BrowserWidget(QWidget *parent = 0);
     ~BrowserWidget();
+    QStringList getSelected();
+    QString getRootPath();
 
 private:
     void CustomizeUI();
