@@ -37,8 +37,8 @@ void BrowserWidget::CustomizeUI()
 
     ui->fileSystemView->horizontalHeader()->setStretchLastSection(true);
     ui->fileSystemView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-
-    ui->fileSystemView->setShowGrid(true);
+    ui->fileSystemView->setAlternatingRowColors(true);
+    ui->fileSystemView->setShowGrid(false);
 
     setFocusProxy(ui->fileSystemView);
 }

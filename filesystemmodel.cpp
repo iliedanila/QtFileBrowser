@@ -1,6 +1,7 @@
 #include "filesystemmodel.h"
 
 #include <QMimeData>
+#include <QVariant>
 
 FileSystemModel::FileSystemModel(QObject *parent)
 :
@@ -64,39 +65,37 @@ bool FileSystemModel::dropMimeData(const QMimeData *data,
     if (column > 0)
         return false;
 
-    int beginRow;
-
-    if (row != -1)
-        beginRow = row;
-    else if (parent.isValid())
-        beginRow = parent.row();
-    else
-        beginRow = rowCount(QModelIndex());
-
-    QFileInfo parentFile = fileInfo(parent);
-    QString parentPath = parentFile.absoluteFilePath();
-
     QByteArray encodedData = data->data("application/filePaths");
     QDataStream stream(&encodedData, QIODevice::ReadOnly);
     QList<QFileInfo> newItems;
-    int rows = 0;
 
     while (!stream.atEnd())
     {
         QString filePath;
         stream >> filePath;
         newItems << QFileInfo(filePath);
-        ++rows;
     }
     return true;
 }
 
-bool FileSystemModel::insertRows(int row, int count, const QModelIndex &parent)
+QVariant FileSystemModel::data(const QModelIndex &index, int role) const
 {
-    // TODO:
+    if (role == Qt::TextAlignmentRole)
+    {
+        int flags;
+        if (index.column() == 0)
+        {
+            flags = Qt::AlignLeft | Qt::AlignVCenter;
+        }
+        else
+        {
+            flags = Qt::AlignCenter;
+        }
+        return flags;
+    }
+    else
+    {
+        return QFileSystemModel::data(index, role);
+    }
 }
 
-bool FileSystemModel::setData(const QModelIndex &index, const QVariant &value, int role)
-{
-    // TODO:
-}

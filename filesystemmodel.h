@@ -19,8 +19,7 @@ public:
                               int row,
                               int column,
                               const QModelIndex &parent) override;
-    virtual bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
-    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 };
 
 #endif // FILESYSTEMMODEL_H
