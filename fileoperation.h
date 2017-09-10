@@ -24,6 +24,14 @@ public:
             QString destination = QString(),
             QObject* parent = Q_NULLPTR);
 
+    qint64 getTotalSize();
+
+signals:
+    void setProgress(int);
+
+protected:
+    virtual void run() override;
+
 private:
     OperationType operationType;
     QStringList sourceFiles;

@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include <QDir>
+#include <QProgressDialog>
 
 MainWindow::MainWindow(QWidget *parent)
     :
@@ -87,7 +88,20 @@ void MainWindow::handleCopy()
 
     if (filePaths.count())
     {
-        // TODO: copy files.
+        FileOperation* copyOperation = new FileOperation(FileOperation::eCopy, filePaths, destination, this);
+
+        QProgressDialog* dialog = new QProgressDialog("Copy files...", "Cancel", 0, 100, this);
+        dialog->setWindowModality(Qt::WindowModal);
+
+        connect(copyOperation,
+                SIGNAL(setProgress(int)),
+                dialog,
+                SLOT(setValue(int)));
+        connect(copyOperation, SIGNAL(finished()), copyOperation, SLOT(deleteLater()));
+        connect(copyOperation, SIGNAL(finished()), dialog, SLOT(close()));
+
+        copyOperation->start();
+        dialog->show();
     }
 }
 
