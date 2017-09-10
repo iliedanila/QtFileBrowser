@@ -8,7 +8,8 @@ FileOperation::FileOperation(OperationType type, QStringList _sourceFiles, QStri
     QThread(parent),
     operationType(type),
     sourceFiles(_sourceFiles),
-    destination(_destination)
+    destination(_destination),
+    atomicCancel(0)
 {
 }
 
@@ -24,6 +25,11 @@ qint64 FileOperation::getTotalSize()
         }
     }
     return totalSize;
+}
+
+void FileOperation::cancel()
+{
+    atomicCancel = true;
 }
 
 void FileOperation::run()
@@ -44,12 +50,17 @@ void FileOperation::run()
         destinationFile.open(QFile::WriteOnly);
 
         QByteArray buffer;
-        while (!(buffer = sourceFile.read(1024 * 100)).isEmpty())
+        while (!(buffer = sourceFile.read(1024 * 100)).isEmpty() && !atomicCancel)
         {
             bytesCopied += buffer.size();
             destinationFile.write(buffer);
             int percent = 100 * bytesCopied / totalSize;
             emit setProgress(percent);
+        }
+
+        if (atomicCancel)
+        {
+            destinationFile.remove();
         }
     }
 }

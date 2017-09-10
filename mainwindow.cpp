@@ -99,6 +99,7 @@ void MainWindow::handleCopy()
                 SLOT(setValue(int)));
         connect(copyOperation, SIGNAL(finished()), copyOperation, SLOT(deleteLater()));
         connect(copyOperation, SIGNAL(finished()), dialog, SLOT(close()));
+        connect(dialog, SIGNAL(canceled()), copyOperation, SLOT(cancel()));
 
         copyOperation->start();
         dialog->show();

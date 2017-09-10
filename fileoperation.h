@@ -2,6 +2,7 @@
 #define FILEOPERATION_H
 
 #include <QThread>
+#include <QAtomicInt>
 
 class FileOperation : public QThread
 {
@@ -29,6 +30,9 @@ public:
 signals:
     void setProgress(int);
 
+public slots:
+    void cancel();
+
 protected:
     virtual void run() override;
 
@@ -36,6 +40,8 @@ private:
     OperationType operationType;
     QStringList sourceFiles;
     QString destination;
+    QAtomicInt atomicCancel;
+
 };
 
 #endif // FILEOPERATION_H
