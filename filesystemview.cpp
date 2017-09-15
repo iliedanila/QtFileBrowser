@@ -24,6 +24,14 @@ void FileSystemView::keyPressEvent(QKeyEvent *event)
     {
         emit goToParent();
     }
+    else if (event->key() == Qt::Key_F5)
+    {
+        emit copy();
+    }
+    else if (event->key() == Qt::Key_F8)
+    {
+        emit del();
+    }
     else
     {
         QTableView::keyPressEvent(event);

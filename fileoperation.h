@@ -37,6 +37,10 @@ protected:
     virtual void run() override;
 
 private:
+    void copy();
+    void del();
+
+private:
     OperationType operationType;
     QStringList sourceFiles;
     QString destination;

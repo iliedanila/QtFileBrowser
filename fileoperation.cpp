@@ -16,13 +16,21 @@ FileOperation::FileOperation(OperationType type, QStringList _sourceFiles, QStri
 qint64 FileOperation::getTotalSize()
 {
     qint64 totalSize = 0;
-    for (auto filePath : sourceFiles)
+
+    if (operationType == eCopy)
     {
-        QFileInfo fileInfo(filePath);
-        if (!fileInfo.isDir())
+        for (auto filePath : sourceFiles)
         {
-            totalSize += fileInfo.size();
+            QFileInfo fileInfo(filePath);
+            if (!fileInfo.isDir())
+            {
+                totalSize += fileInfo.size();
+            }
         }
+    }
+    else if (operationType == eDelete)
+    {
+        totalSize = sourceFiles.count();
     }
     return totalSize;
 }
@@ -33,6 +41,18 @@ void FileOperation::cancel()
 }
 
 void FileOperation::run()
+{
+    if (operationType == eCopy)
+    {
+        copy();
+    }
+    else if (operationType == eDelete)
+    {
+        del();
+    }
+}
+
+void FileOperation::copy()
 {
     qint64 totalSize = getTotalSize();
     qint64 bytesCopied = 0;
@@ -62,6 +82,22 @@ void FileOperation::run()
         {
             destinationFile.remove();
         }
+    }
+}
+
+void FileOperation::del()
+{
+    qint64 totalFileCount = getTotalSize();
+    qint64 filesDeleted = 0;
+
+    while(sourceFiles.count() && !atomicCancel)
+    {
+        QFile sourceFile(*sourceFiles.begin());
+        sourceFiles.pop_front();
+        sourceFile.remove();
+        filesDeleted++;
+        int percent = 100 * filesDeleted / totalFileCount;
+        emit setProgress(percent);
     }
 }
 

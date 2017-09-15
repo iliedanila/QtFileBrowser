@@ -88,10 +88,21 @@ void BrowserWidget::Connect()
             this,
             SLOT(goToParent()));
 
+    connect(ui->fileSystemView,
+            SIGNAL(copy()),
+            this,
+            SIGNAL(copy()));
+
+    connect(ui->fileSystemView,
+            SIGNAL(del()),
+            this,
+            SIGNAL(del()));
+
     connect(ui->driveList,
             SIGNAL(setPath(QString)),
             this,
             SLOT(setPath(QString)));
+
     connect(ui->driveList,
             SIGNAL(pathNotAvailable(QString)),
             this,

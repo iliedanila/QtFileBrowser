@@ -27,6 +27,8 @@ private:
 signals:
     void rootPathChanged(QString);
     void switchMe();
+    void copy();
+    void del();
 
 private slots:
     void enterFolder(QModelIndex);

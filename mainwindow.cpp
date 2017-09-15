@@ -53,6 +53,31 @@ void MainWindow::Connect()
             this,
             SLOT(handleCopy())) != Q_NULLPTR;
 
+    connected &= connect(ui->leftBrowser,
+                         SIGNAL(copy()),
+                         this,
+                         SLOT(handleCopy())) != Q_NULLPTR;
+
+    connected &= connect(ui->rightBrowser,
+                         SIGNAL(copy()),
+                         this,
+                         SLOT(handleCopy())) != Q_NULLPTR;
+
+    connected &= connect(ui->deleteButton,
+                         SIGNAL(pressed()),
+                         this,
+                         SLOT(handleDel())) != Q_NULLPTR;
+
+    connected &= connect(ui->leftBrowser,
+                         SIGNAL(del()),
+                         this,
+                         SLOT(handleDel())) != Q_NULLPTR;
+
+    connected &= connect(ui->rightBrowser,
+                         SIGNAL(del()),
+                         this,
+                         SLOT(handleDel())) != Q_NULLPTR;
+
     Q_ASSERT(connected);
 }
 
@@ -103,6 +128,38 @@ void MainWindow::handleCopy()
 
         copyOperation->start();
         dialog->show();
+    }
+}
+
+void MainWindow::handleDel()
+{
+    QStringList filePaths;
+    if (ui->leftBrowser->hasFocus())
+    {
+        filePaths = ui->leftBrowser->getSelected();
+    }
+    if (ui->rightBrowser->hasFocus())
+    {
+        filePaths = ui->rightBrowser->getSelected();
+    }
+
+    if (filePaths.count())
+    {
+        FileOperation* delOperation = new FileOperation(FileOperation::eDelete, filePaths, QString(), this);
+        QProgressDialog* dialog = new QProgressDialog("Deleting files...", "Cancel", 0, 100, this);
+        dialog->setWindowModality(Qt::WindowModal);
+
+        connect(delOperation,
+                SIGNAL(setProgress(int)),
+                dialog,
+                SLOT(setValue(int)));
+        connect(delOperation, SIGNAL(finished()), delOperation, SLOT(deleteLater()));
+        connect(delOperation, SIGNAL(finished()), dialog, SLOT(close()));
+        connect(dialog, SIGNAL(canceled()), delOperation, SLOT(cancel()));
+
+        delOperation->start();
+        dialog->show();
+
     }
 }
 

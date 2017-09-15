@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>588</width>
-    <height>508</height>
+    <width>1216</width>
+    <height>896</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -62,7 +62,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>View</string>
+         <string>F3 View</string>
         </property>
        </widget>
       </item>
@@ -82,7 +82,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Edit</string>
+         <string>F4 Edit</string>
         </property>
        </widget>
       </item>
@@ -102,7 +102,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Copy</string>
+         <string>F5 Copy</string>
         </property>
        </widget>
       </item>
@@ -122,7 +122,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Move</string>
+         <string>F6 Move</string>
         </property>
        </widget>
       </item>
@@ -142,7 +142,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>New Folder</string>
+         <string>F7 New Folder</string>
         </property>
        </widget>
       </item>
@@ -162,7 +162,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Delete</string>
+         <string>F8 Delete</string>
         </property>
        </widget>
       </item>
@@ -175,8 +175,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>588</width>
-     <height>20</height>
+     <width>1216</width>
+     <height>37</height>
     </rect>
    </property>
   </widget>

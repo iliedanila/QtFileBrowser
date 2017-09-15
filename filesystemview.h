@@ -18,6 +18,8 @@ signals:
     void switchMe();
     void gotFocus();
     void goToParent();
+    void copy();
+    void del();
 };
 
 #endif // FILESYSTEMVIEW_H
