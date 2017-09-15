@@ -116,7 +116,7 @@ void MainWindow::handleCopy()
         FileOperation* copyOperation = new FileOperation(FileOperation::eCopy, filePaths, destination, this);
 
         QProgressDialog* dialog = new QProgressDialog("Copy files...", "Cancel", 0, 100, this);
-        dialog->setWindowModality(Qt::WindowModal);
+        dialog->setWindowModality(Qt::NonModal);
 
         connect(copyOperation,
                 SIGNAL(setProgress(int)),
@@ -147,7 +147,7 @@ void MainWindow::handleDel()
     {
         FileOperation* delOperation = new FileOperation(FileOperation::eDelete, filePaths, QString(), this);
         QProgressDialog* dialog = new QProgressDialog("Deleting files...", "Cancel", 0, 100, this);
-        dialog->setWindowModality(Qt::WindowModal);
+        dialog->setWindowModality(Qt::NonModal);
 
         connect(delOperation,
                 SIGNAL(setProgress(int)),
