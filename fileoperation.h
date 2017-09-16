@@ -45,7 +45,8 @@ private:
     QStringList sourceFiles;
     QString destination;
     QAtomicInt atomicCancel;
-
+    QStringList filesToDelete;
+    QStringList foldersToDelete;
 };
 
 #endif // FILEOPERATION_H

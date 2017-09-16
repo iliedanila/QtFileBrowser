@@ -2,6 +2,7 @@
 
 #include <QFileInfo>
 #include <QFile>
+#include <QDir>
 
 FileOperation::FileOperation(OperationType type, QStringList _sourceFiles, QString _destination, QObject* parent)
     :
@@ -30,7 +31,31 @@ qint64 FileOperation::getTotalSize()
     }
     else if (operationType == eDelete)
     {
-        totalSize = sourceFiles.count();
+        filesToDelete = sourceFiles;
+        foldersToDelete.clear();
+
+        int index = 0;
+        while(index < filesToDelete.count() && !atomicCancel)
+        {
+            QFileInfo fileInfo(filesToDelete.at(index));
+            if (fileInfo.isDir())
+            {
+                foldersToDelete.push_back(fileInfo.absoluteFilePath());
+                filesToDelete.removeAt(index);
+                QDir dir(fileInfo.absoluteFilePath());
+                auto entryInfoList = dir.entryInfoList(QDir::NoDotAndDotDot | QDir::Dirs | QDir::Files);
+                for (auto entryInfo : entryInfoList)
+                {
+                    filesToDelete.push_back(entryInfo.absoluteFilePath());
+                }
+            }
+            else
+            {
+                index++;
+            }
+        }
+
+        totalSize = filesToDelete.count() + foldersToDelete.count();
     }
     return totalSize;
 }
@@ -87,16 +112,27 @@ void FileOperation::copy()
 
 void FileOperation::del()
 {
-    qint64 totalFileCount = getTotalSize();
+    qint64 totalCount = getTotalSize();
     qint64 filesDeleted = 0;
+    qint64 foldersDeleted = 0;
 
-    while(sourceFiles.count() && !atomicCancel)
+    while(filesToDelete.count() && !atomicCancel)
     {
-        QFile sourceFile(*sourceFiles.begin());
-        sourceFiles.pop_front();
+        QFile sourceFile(filesToDelete.first());
+        filesToDelete.pop_front();
         sourceFile.remove();
         filesDeleted++;
-        int percent = 100 * filesDeleted / totalFileCount;
+        int percent = 100 * filesDeleted / totalCount;
+        emit setProgress(percent);
+    }
+
+    while (foldersToDelete.count() && !atomicCancel)
+    {
+        QDir dir(foldersToDelete.last());
+        foldersToDelete.pop_back();
+        dir.removeRecursively();
+        foldersDeleted++;
+        int percent = 100 * (filesDeleted + foldersDeleted) / totalCount;
         emit setProgress(percent);
     }
 }
