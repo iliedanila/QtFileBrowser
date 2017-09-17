@@ -99,21 +99,24 @@ void MainWindow::switchToRightBrowser()
 void MainWindow::handleCopy()
 {
     QStringList filePaths;
+    QString rootFolder;
     QString destination;
     if (ui->leftBrowser->hasFocus())
     {
         filePaths = ui->leftBrowser->getSelected();
+        rootFolder = ui->leftBrowser->getRootPath();
         destination = ui->rightBrowser->getRootPath();
     }
     if (ui->rightBrowser->hasFocus())
     {
         filePaths = ui->rightBrowser->getSelected();
+        rootFolder = ui->rightBrowser->getRootPath();
         destination = ui->leftBrowser->getRootPath();
     }
 
     if (filePaths.count())
     {
-        FileOperation* copyOperation = new FileOperation(FileOperation::eCopy, filePaths, destination, this);
+        FileOperation* copyOperation = new FileOperation(FileOperation::eCopy, rootFolder, filePaths, destination, this);
 
         QProgressDialog* dialog = new QProgressDialog("Copy files...", "Cancel", 0, 100, this);
         dialog->setWindowModality(Qt::NonModal);
@@ -134,18 +137,22 @@ void MainWindow::handleCopy()
 void MainWindow::handleDel()
 {
     QStringList filePaths;
+    QString rootFolder;
+
     if (ui->leftBrowser->hasFocus())
     {
         filePaths = ui->leftBrowser->getSelected();
+        rootFolder = ui->leftBrowser->getRootPath();
     }
     if (ui->rightBrowser->hasFocus())
     {
         filePaths = ui->rightBrowser->getSelected();
+        rootFolder = ui->rightBrowser->getRootPath();
     }
 
     if (filePaths.count())
     {
-        FileOperation* delOperation = new FileOperation(FileOperation::eDelete, filePaths, QString(), this);
+        FileOperation* delOperation = new FileOperation(FileOperation::eDelete, rootFolder, filePaths, QString(), this);
         QProgressDialog* dialog = new QProgressDialog("Deleting files...", "Cancel", 0, 100, this);
         dialog->setWindowModality(Qt::NonModal);
 

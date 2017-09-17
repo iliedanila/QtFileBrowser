@@ -21,6 +21,7 @@ public:
 
     explicit FileOperation(
             OperationType type,
+            QString rootFolder,
             QStringList sourceFiles,
             QString destination = QString(),
             QObject* parent = Q_NULLPTR);
@@ -42,11 +43,12 @@ private:
 
 private:
     OperationType operationType;
+    QString rootFolder;
     QStringList sourceFiles;
     QString destination;
     QAtomicInt atomicCancel;
-    QStringList filesToDelete;
-    QStringList foldersToDelete;
+    QStringList filesList;
+    QStringList foldersList;
 };
 
 #endif // FILEOPERATION_H
