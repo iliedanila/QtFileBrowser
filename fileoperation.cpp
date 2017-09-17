@@ -110,7 +110,7 @@ void FileOperation::copy()
         QDir dir(destination + "/" + relativePathToRoot);
         if (!dir.exists())
         {
-            dir.mkdir(".");
+            dir.mkpath(".");
         }
     }
 
