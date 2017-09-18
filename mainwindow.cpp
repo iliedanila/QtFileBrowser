@@ -3,6 +3,7 @@
 
 #include <QDir>
 #include <QProgressDialog>
+#include <QProcess>
 
 MainWindow::MainWindow(QWidget *parent)
     :
@@ -77,6 +78,11 @@ void MainWindow::Connect()
                          SIGNAL(del()),
                          this,
                          SLOT(handleDel())) != Q_NULLPTR;
+
+    connected &= connect(ui->commandEdit,
+                         SIGNAL(returnPressed()),
+                         this,
+                         SLOT(handleCommand())) != Q_NULLPTR;
 
     Q_ASSERT(connected);
 }
@@ -168,5 +174,14 @@ void MainWindow::handleDel()
         dialog->show();
 
     }
+}
+
+void MainWindow::handleCommand()
+{
+    auto command = ui->commandEdit->text();
+    auto path = ui->currentPath->text();
+    QProcess* terminalProcess = new QProcess(this);
+    terminalProcess->startDetached(command, QStringList(), path);
+    ui->commandEdit->clear();
 }
 
