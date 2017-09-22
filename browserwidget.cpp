@@ -111,9 +111,10 @@ void BrowserWidget::Connect()
 
 void BrowserWidget::SelectFirstRow(bool directoryChanged)
 {
-    if (ui->fileSystemView->selectionModel()->selectedRows().count() == 0 ||
-        directoryChanged)
+    auto indexes = ui->fileSystemView->selectionModel()->selection().indexes();
+    if (indexes.count() == 0 || directoryChanged)
     {
+        ui->fileSystemView->clearSelection();
         ui->fileSystemView->selectRow(0);
     }
 }
@@ -133,7 +134,8 @@ void BrowserWidget::enterFolder(QModelIndex index)
 
 void BrowserWidget::handleRootPathChanged(QString newPath)
 {
-    emit rootPathChanged(newPath);
+    Q_UNUSED(newPath);
+
     SelectFirstRow(true);
 }
 
@@ -144,7 +146,6 @@ void BrowserWidget::handleSwitchMeRequest()
 
 void BrowserWidget::handleGotFocus()
 {
-    emit rootPathChanged(fileSystemModel->rootPath());
     SelectFirstRow(false);
 }
 

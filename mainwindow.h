@@ -21,13 +21,10 @@ private:
     void Connect();
 
 private slots:
-    void handleRootPathChanged(QString);
     void switchToLeftBrowser();
     void switchToRightBrowser();
     void handleCopy();
     void handleDel();
-    void handleCommand();
-
 
 private:
     Ui::MainWindow *ui;

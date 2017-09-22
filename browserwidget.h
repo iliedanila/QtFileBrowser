@@ -25,7 +25,6 @@ private:
     void SelectFirstRow(bool directoryChanged);
 
 signals:
-    void rootPathChanged(QString);
     void switchMe();
     void copy();
     void del();

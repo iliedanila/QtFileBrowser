@@ -23,22 +23,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::CustomizeUI()
 {
-    ui->currentPath->setText(QDir::homePath());
 }
 
 void MainWindow::Connect()
 {
     bool connected = true;
-    connected &= connect(ui->leftBrowser,
-            SIGNAL(rootPathChanged(QString)),
-            this,
-            SLOT(handleRootPathChanged(QString))) != Q_NULLPTR;
-
-    connected &= connect(ui->rightBrowser,
-            SIGNAL(rootPathChanged(QString)),
-            this,
-            SLOT(handleRootPathChanged(QString))) != Q_NULLPTR;
-
     connected &= connect(ui->leftBrowser,
             SIGNAL(switchMe()),
             this,
@@ -79,17 +68,7 @@ void MainWindow::Connect()
                          this,
                          SLOT(handleDel())) != Q_NULLPTR;
 
-    connected &= connect(ui->commandEdit,
-                         SIGNAL(returnPressed()),
-                         this,
-                         SLOT(handleCommand())) != Q_NULLPTR;
-
     Q_ASSERT(connected);
-}
-
-void MainWindow::handleRootPathChanged(QString newPath)
-{
-    ui->currentPath->setText(newPath);
 }
 
 void MainWindow::switchToLeftBrowser()
@@ -175,13 +154,3 @@ void MainWindow::handleDel()
 
     }
 }
-
-void MainWindow::handleCommand()
-{
-    auto command = ui->commandEdit->text();
-    auto path = ui->currentPath->text();
-    QProcess* terminalProcess = new QProcess(this);
-    terminalProcess->startDetached(command, QStringList(), path);
-    ui->commandEdit->clear();
-}
-
