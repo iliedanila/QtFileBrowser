@@ -17,33 +17,20 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="DriveList" name="driveList" native="true"/>
+      <widget class="QToolButton" name="homeButton">
+       <property name="text">
+        <string>Home</string>
+       </property>
+       <property name="toolButtonStyle">
+        <enum>Qt::ToolButtonTextBesideIcon</enum>
+       </property>
+      </widget>
      </item>
      <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
+      <widget class="QComboBox" name="comboBox"/>
      </item>
      <item>
-      <spacer name="horizontalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
+      <widget class="QLineEdit" name="lineEdit"/>
      </item>
     </layout>
    </item>
@@ -64,12 +51,6 @@
    <class>FileSystemView</class>
    <extends>QTableView</extends>
    <header>filesystemview.h</header>
-  </customwidget>
-  <customwidget>
-   <class>DriveList</class>
-   <extends>QWidget</extends>
-   <header>drivelist.h</header>
-   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

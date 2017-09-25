@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QFileSystemWatcher>
+#include <QFileIconProvider>
 #include "filesystemmodel.h"
 
 namespace Ui {
@@ -40,7 +41,7 @@ private slots:
 
 private:
     Ui::BrowserWidget *ui;
-
+    QFileIconProvider iconProvider;
     FileSystemModel* fileSystemModel;
 };
 

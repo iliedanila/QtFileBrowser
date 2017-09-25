@@ -40,6 +40,7 @@ QString BrowserWidget::getRootPath()
 
 void BrowserWidget::CustomizeUI()
 {
+    ui->homeButton->setIcon(iconProvider.icon(QFileIconProvider::Computer));
     fileSystemModel->setFilter(QDir::AllDirs | QDir::NoDot | QDir::Dirs | QDir::Files);
 
     ui->fileSystemView->setModel(fileSystemModel);
@@ -98,15 +99,15 @@ void BrowserWidget::Connect()
             this,
             SIGNAL(del()));
 
-    connect(ui->driveList,
-            SIGNAL(setPath(QString)),
-            this,
-            SLOT(setPath(QString)));
+//    connect(ui->driveList,
+//            SIGNAL(setPath(QString)),
+//            this,
+//            SLOT(setPath(QString)));
 
-    connect(ui->driveList,
-            SIGNAL(pathNotAvailable(QString)),
-            this,
-            SLOT(pathNotAvailable(QString)));
+//    connect(ui->driveList,
+//            SIGNAL(pathNotAvailable(QString)),
+//            this,
+//            SLOT(pathNotAvailable(QString)));
 }
 
 void BrowserWidget::SelectFirstRow(bool directoryChanged)
