@@ -3,16 +3,22 @@
 
 #include <QDebug>
 #include <QDir>
+#include <QStorageInfo>
 
 BrowserWidget::BrowserWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::BrowserWidget)
 {
     ui->setupUi(this);
+
     fileSystemModel = new FileSystemModel(this);
+    driveTimer = new QTimer(this);
 
     CustomizeUI();
     Connect();
+
+    driveTimer->setInterval(1000);
+    driveTimer->start(1000);
 }
 
 BrowserWidget::~BrowserWidget()
@@ -64,50 +70,68 @@ void BrowserWidget::CustomizeUI()
 
 void BrowserWidget::Connect()
 {
-    connect(ui->fileSystemView,
-            SIGNAL(doubleClicked(QModelIndex)),
-            this,
-            SLOT(enterFolder(QModelIndex)));
+    bool connected = true;
+    connected &= connect(
+        ui->fileSystemView,
+        SIGNAL(doubleClicked(QModelIndex)),
+        this,
+        SLOT(enterFolder(QModelIndex))) != Q_NULLPTR;
 
-    connect(fileSystemModel,
-            SIGNAL(rootPathChanged(QString)),
-            this,
-            SLOT(handleRootPathChanged(QString)));
+    connected &= connect(
+        fileSystemModel,
+        SIGNAL(rootPathChanged(QString)),
+        this,
+        SLOT(handleRootPathChanged(QString))) != Q_NULLPTR;
 
-    connect(ui->fileSystemView,
-            SIGNAL(switchMe()),
-            this,
-            SLOT(handleSwitchMeRequest()));
+    connected &= connect(
+        ui->fileSystemView,
+        SIGNAL(switchMe()),
+        this,
+        SLOT(handleSwitchMeRequest())) != Q_NULLPTR;
 
-    connect(ui->fileSystemView,
-            SIGNAL(gotFocus()),
-            this,
-            SLOT(handleGotFocus()));
+    connected &= connect(
+        ui->fileSystemView,
+        SIGNAL(gotFocus()),
+        this,
+        SLOT(handleGotFocus())) != Q_NULLPTR;
 
-    connect(ui->fileSystemView,
-            SIGNAL(goToParent()),
-            this,
-            SLOT(goToParent()));
+    connected &= connect(
+        ui->fileSystemView,
+        SIGNAL(goToParent()),
+        this,
+        SLOT(goToParent())) != Q_NULLPTR;
 
-    connect(ui->fileSystemView,
-            SIGNAL(copy()),
-            this,
-            SIGNAL(copy()));
+    connected &= connect(
+        ui->fileSystemView,
+        SIGNAL(copy()),
+        this,
+        SIGNAL(copy())) != Q_NULLPTR;
 
-    connect(ui->fileSystemView,
-            SIGNAL(del()),
-            this,
-            SIGNAL(del()));
+    connected &= connect(
+        ui->fileSystemView,
+        SIGNAL(del()),
+        this,
+        SIGNAL(del())) != Q_NULLPTR;
 
-//    connect(ui->driveList,
-//            SIGNAL(setPath(QString)),
-//            this,
-//            SLOT(setPath(QString)));
+    connected &= connect(
+        ui->homeButton,
+        SIGNAL(clicked()),
+        this,
+        SLOT(setHome())) != Q_NULLPTR;
 
-//    connect(ui->driveList,
-//            SIGNAL(pathNotAvailable(QString)),
-//            this,
-//            SLOT(pathNotAvailable(QString)));
+    connected &= connect(
+        driveTimer,
+        SIGNAL(timeout()),
+        this,
+        SLOT(populateDriveList())) != Q_NULLPTR;
+
+    connected &= connect(
+        ui->driveList,
+        SIGNAL(currentTextChanged(QString)),
+        this,
+        SLOT(setPath(QString))) != Q_NULLPTR;
+
+    Q_ASSERT(connected);
 }
 
 void BrowserWidget::SelectFirstRow(bool directoryChanged)
@@ -135,8 +159,7 @@ void BrowserWidget::enterFolder(QModelIndex index)
 
 void BrowserWidget::handleRootPathChanged(QString newPath)
 {
-    Q_UNUSED(newPath);
-
+    ui->currentPath->setText(newPath);
     SelectFirstRow(true);
 }
 
@@ -164,10 +187,33 @@ void BrowserWidget::setPath(QString path)
     ui->fileSystemView->setRootIndex(fileSystemModel->setRootPath(path));
 }
 
+void BrowserWidget::setHome()
+{
+    setPath("");
+}
+
 void BrowserWidget::pathNotAvailable(QString /*path*/)
 {
     if (!QDir(fileSystemModel->rootPath()).exists())
     {
         ui->fileSystemView->setRootIndex(fileSystemModel->setRootPath(QDir::homePath()));
+    }
+}
+
+void BrowserWidget::populateDriveList()
+{
+    auto storageInfoList = QStorageInfo::mountedVolumes();
+
+    if (storageInfoList.count() != ui->driveList->count())
+    {
+        ui->driveList->clear();
+
+        for (auto storageInfo : storageInfoList)
+        {
+            auto storagePath = storageInfo.rootPath();
+            auto icon = iconProvider.icon(QFileInfo(storageInfo.rootPath()));
+
+            ui->driveList->addItem(icon, storagePath);
+        }
     }
 }
