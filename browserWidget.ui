@@ -30,6 +30,13 @@
       <widget class="QComboBox" name="driveList"/>
      </item>
      <item>
+      <widget class="QLabel" name="pathLabel">
+       <property name="text">
+        <string>Current Path:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QLineEdit" name="currentPath"/>
      </item>
     </layout>

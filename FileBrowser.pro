@@ -29,7 +29,6 @@ SOURCES += \
     filesystemview.cpp \
     browserwidget.cpp \
     filesystemmodel.cpp \
-    drivelist.cpp \
     fileoperation.cpp
 
 HEADERS += \
@@ -37,7 +36,6 @@ HEADERS += \
     filesystemview.h \
     browserwidget.h \
     filesystemmodel.h \
-    drivelist.h \
     fileoperation.h
 
 FORMS += \

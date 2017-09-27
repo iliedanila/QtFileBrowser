@@ -5,6 +5,8 @@
 #include <QFileSystemWatcher>
 #include <QFileIconProvider>
 #include <QTimer>
+#include <QCompleter>
+
 
 #include "filesystemmodel.h"
 
@@ -48,6 +50,7 @@ private:
     QFileIconProvider iconProvider;
     FileSystemModel* fileSystemModel;
     QTimer* driveTimer;
+    QCompleter* completer;
 };
 
 #endif // BROWSERWIDGET_H

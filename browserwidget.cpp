@@ -3,6 +3,7 @@
 
 #include <QDebug>
 #include <QDir>
+#include <QDirModel>
 #include <QStorageInfo>
 
 BrowserWidget::BrowserWidget(QWidget *parent) :
@@ -13,6 +14,9 @@ BrowserWidget::BrowserWidget(QWidget *parent) :
 
     fileSystemModel = new FileSystemModel(this);
     driveTimer = new QTimer(this);
+    completer = new QCompleter(this);
+    completer->setModel(new QDirModel(completer));
+    ui->currentPath->setCompleter(completer);
 
     CustomizeUI();
     Connect();
@@ -128,6 +132,12 @@ void BrowserWidget::Connect()
     connected &= connect(
         ui->driveList,
         SIGNAL(currentTextChanged(QString)),
+        this,
+        SLOT(setPath(QString))) != Q_NULLPTR;
+
+    connected &= connect(
+        ui->currentPath,
+        SIGNAL(textChanged(QString)),
         this,
         SLOT(setPath(QString))) != Q_NULLPTR;
 
