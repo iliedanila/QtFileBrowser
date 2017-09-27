@@ -3,6 +3,9 @@
 
 #include <QWidget>
 #include <QFileSystemWatcher>
+#include <QFileIconProvider>
+#include <QTimer>
+
 #include "filesystemmodel.h"
 
 namespace Ui {
@@ -36,12 +39,15 @@ private slots:
     void handleGotFocus();
     void goToParent();
     void setPath(QString);
+    void setHome();
     void pathNotAvailable(QString);
+    void populateDriveList();
 
 private:
     Ui::BrowserWidget *ui;
-
+    QFileIconProvider iconProvider;
     FileSystemModel* fileSystemModel;
+    QTimer* driveTimer;
 };
 
 #endif // BROWSERWIDGET_H
