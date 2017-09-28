@@ -22,7 +22,7 @@ BrowserWidget::BrowserWidget(QWidget *parent) :
     Connect();
 
     driveTimer->setInterval(1000);
-    driveTimer->start(1000);
+    driveTimer->start(0);
 }
 
 BrowserWidget::~BrowserWidget()
@@ -118,6 +118,12 @@ void BrowserWidget::Connect()
         SIGNAL(del())) != Q_NULLPTR;
 
     connected &= connect(
+        ui->fileSystemView,
+        SIGNAL(newFolder()),
+        this,
+        SIGNAL(newFolder())) != Q_NULLPTR;
+
+    connected &= connect(
         ui->homeButton,
         SIGNAL(clicked()),
         this,
@@ -202,7 +208,7 @@ void BrowserWidget::setHome()
     setPath("");
 }
 
-void BrowserWidget::pathNotAvailable(QString /*path*/)
+void BrowserWidget::checkPathNotAvailable()
 {
     if (!QDir(fileSystemModel->rootPath()).exists())
     {
@@ -225,5 +231,7 @@ void BrowserWidget::populateDriveList()
 
             ui->driveList->addItem(icon, storagePath);
         }
+
+        checkPathNotAvailable();
     }
 }

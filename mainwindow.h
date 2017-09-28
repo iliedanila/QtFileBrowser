@@ -25,6 +25,7 @@ private slots:
     void switchToRightBrowser();
     void handleCopy();
     void handleDel();
+    void handleNewFolder();
 
 private:
     Ui::MainWindow *ui;

@@ -33,6 +33,7 @@ signals:
     void switchMe();
     void copy();
     void del();
+    void newFolder();
 
 private slots:
     void enterFolder(QModelIndex);
@@ -42,7 +43,7 @@ private slots:
     void goToParent();
     void setPath(QString);
     void setHome();
-    void pathNotAvailable(QString);
+    void checkPathNotAvailable();
     void populateDriveList();
 
 private:

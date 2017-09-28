@@ -4,6 +4,7 @@
 #include <QDir>
 #include <QProgressDialog>
 #include <QProcess>
+#include <QInputDialog>
 
 MainWindow::MainWindow(QWidget *parent)
     :
@@ -28,45 +29,71 @@ void MainWindow::CustomizeUI()
 void MainWindow::Connect()
 {
     bool connected = true;
-    connected &= connect(ui->leftBrowser,
-            SIGNAL(switchMe()),
-            this,
-            SLOT(switchToRightBrowser())) != Q_NULLPTR;
+    connected &= connect(
+        ui->leftBrowser,
+        SIGNAL(switchMe()),
+        this,
+        SLOT(switchToRightBrowser())) != Q_NULLPTR;
 
-    connected &= connect(ui->rightBrowser,
-            SIGNAL(switchMe()),
-            this,
-            SLOT(switchToLeftBrowser())) != Q_NULLPTR;
+    connected &= connect(
+        ui->rightBrowser,
+        SIGNAL(switchMe()),
+        this,
+        SLOT(switchToLeftBrowser())) != Q_NULLPTR;
 
-    connected &= connect(ui->copyButton,
-            SIGNAL(pressed()),
-            this,
-            SLOT(handleCopy())) != Q_NULLPTR;
+    connected &= connect(
+        ui->copyButton,
+        SIGNAL(pressed()),
+        this,
+        SLOT(handleCopy())) != Q_NULLPTR;
 
-    connected &= connect(ui->leftBrowser,
-                         SIGNAL(copy()),
-                         this,
-                         SLOT(handleCopy())) != Q_NULLPTR;
+    connected &= connect(
+        ui->leftBrowser,
+        SIGNAL(copy()),
+        this,
+        SLOT(handleCopy())) != Q_NULLPTR;
 
-    connected &= connect(ui->rightBrowser,
-                         SIGNAL(copy()),
-                         this,
-                         SLOT(handleCopy())) != Q_NULLPTR;
+    connected &= connect(
+        ui->rightBrowser,
+        SIGNAL(copy()),
+        this,
+        SLOT(handleCopy())) != Q_NULLPTR;
 
-    connected &= connect(ui->deleteButton,
-                         SIGNAL(pressed()),
-                         this,
-                         SLOT(handleDel())) != Q_NULLPTR;
+    connected &= connect(
+        ui->deleteButton,
+        SIGNAL(pressed()),
+        this,
+        SLOT(handleDel())) != Q_NULLPTR;
 
-    connected &= connect(ui->leftBrowser,
-                         SIGNAL(del()),
-                         this,
-                         SLOT(handleDel())) != Q_NULLPTR;
+    connected &= connect(
+        ui->leftBrowser,
+        SIGNAL(del()),
+        this,
+        SLOT(handleDel())) != Q_NULLPTR;
 
-    connected &= connect(ui->rightBrowser,
-                         SIGNAL(del()),
-                         this,
-                         SLOT(handleDel())) != Q_NULLPTR;
+    connected &= connect(
+        ui->rightBrowser,
+        SIGNAL(del()),
+        this,
+        SLOT(handleDel())) != Q_NULLPTR;
+
+    connected &= connect(
+        ui->newFolderButton,
+        SIGNAL(clicked()),
+        this,
+        SLOT(handleNewFolder())) != Q_NULLPTR;
+
+    connected &= connect(
+        ui->leftBrowser,
+        SIGNAL(newFolder()),
+        this,
+        SLOT(handleNewFolder())) != Q_NULLPTR;
+
+    connected &= connect(
+        ui->rightBrowser,
+        SIGNAL(newFolder()),
+        this,
+        SLOT(handleNewFolder())) != Q_NULLPTR;
 
     Q_ASSERT(connected);
 }
@@ -152,5 +179,27 @@ void MainWindow::handleDel()
         delOperation->start();
         dialog->show();
 
+    }
+}
+
+void MainWindow::handleNewFolder()
+{
+    QString rootFolder;
+    if (ui->leftBrowser->hasFocus())
+    {
+        rootFolder = ui->leftBrowser->getRootPath();
+    }
+    else
+    {
+        rootFolder = ui->rightBrowser->getRootPath();
+    }
+
+    bool ok;
+    QString folderName = QInputDialog::getText(this, "New Folder Name", "Insert new folder name:",
+                                               QLineEdit::Normal, QString(), &ok);
+    if (ok && !folderName.isEmpty())
+    {
+        QDir currentFolder(rootFolder);
+        currentFolder.mkdir(folderName);
     }
 }

@@ -32,6 +32,10 @@ void FileSystemView::keyPressEvent(QKeyEvent *event)
     {
         emit del();
     }
+    else if (event->key() == Qt::Key_F7)
+    {
+        emit newFolder();
+    }
     else
     {
         QTableView::keyPressEvent(event);

@@ -20,6 +20,7 @@ signals:
     void goToParent();
     void copy();
     void del();
+    void newFolder();
 };
 
 #endif // FILESYSTEMVIEW_H
