@@ -15,14 +15,16 @@ BrowserWidget::BrowserWidget(QWidget *parent) :
     fileSystemModel = new FileSystemModel(this);
     driveTimer = new QTimer(this);
     completer = new QCompleter(this);
-    completer->setModel(new QDirModel(completer));
+    dirModel = new QDirModel(completer);
+    dirModel->setFilter(QDir::Dirs | QDir::Drives | QDir::NoDotAndDotDot);
+    completer->setModel(dirModel);
     ui->currentPath->setCompleter(completer);
 
     CustomizeUI();
     Connect();
 
     driveTimer->setInterval(1000);
-    driveTimer->start(0);
+    driveTimer->start(1000);
 }
 
 BrowserWidget::~BrowserWidget()
@@ -50,11 +52,26 @@ QString BrowserWidget::getRootPath()
 
 void BrowserWidget::CustomizeUI()
 {
+    populateDriveList();
+
+    QString osType = QSysInfo::productType();
+
     ui->homeButton->setIcon(iconProvider.icon(QFileIconProvider::Computer));
     fileSystemModel->setFilter(QDir::AllDirs | QDir::NoDot | QDir::Dirs | QDir::Files);
-
     ui->fileSystemView->setModel(fileSystemModel);
-    ui->fileSystemView->setRootIndex(fileSystemModel->setRootPath(QDir::homePath()));
+
+    if (osType == "osx" /* || some linux*/)
+    {
+        QString homePath = QDir::homePath();
+        ui->currentPath->setText(homePath);
+        ui->fileSystemView->setRootIndex(fileSystemModel->setRootPath(QDir::homePath()));
+    }
+    else //windows
+    {
+        ui->currentPath->setText(ui->driveList->itemText(0));
+        ui->fileSystemView->setRootIndex(fileSystemModel->setRootPath(ui->driveList->itemText(0)));
+    }
+
     ui->fileSystemView->verticalHeader()->hide();
 
     ui->fileSystemView->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -137,7 +154,7 @@ void BrowserWidget::Connect()
 
     connected &= connect(
         ui->driveList,
-        SIGNAL(currentTextChanged(QString)),
+        SIGNAL(currentIndexChanged(QString)),
         this,
         SLOT(setPath(QString))) != Q_NULLPTR;
 
