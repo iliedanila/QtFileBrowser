@@ -16,6 +16,7 @@ BrowserWidget::BrowserWidget(QWidget *parent) :
     driveTimer = new QTimer(this);
     completer = new QCompleter(this);
     dirModel = new QDirModel(completer);
+    dirModel->setFilter(QDir::Dirs | QDir::Drives | QDir::NoDotAndDotDot);
     completer->setModel(dirModel);
     ui->currentPath->setCompleter(completer);
 
