@@ -37,3 +37,13 @@ Makefile*
 # QtCtreator CMake
 CMakeLists.txt.user*
 
+
+\.vs/FileBrowser/v15/
+
+debug/
+
+x64/Release/
+
+release/
+
+FileBrowser\.vcxproj\.user
