@@ -16,6 +16,7 @@ BrowserWidget::BrowserWidget(QWidget *parent) :
     driveTimer = new QTimer(this);
     completer = new QCompleter(this);
     dirModel = new QDirModel(completer);
+    dirModel->setFilter(QDir::Dirs | QDir::Drives | QDir::NoDotAndDotDot);
     completer->setModel(dirModel);
     ui->currentPath->setCompleter(completer);
 
@@ -174,6 +175,11 @@ void BrowserWidget::SelectFirstRow(bool directoryChanged)
         ui->fileSystemView->clearSelection();
         ui->fileSystemView->selectRow(0);
     }
+}
+
+void BrowserWidget::toggleDriveMenu()
+{
+    ui->driveList->showPopup();
 }
 
 void BrowserWidget::enterFolder(QModelIndex index)
