@@ -33,6 +33,7 @@ private:
 signals:
     void switchMe();
     void copy();
+    void move();
     void del();
     void newFolder();
 

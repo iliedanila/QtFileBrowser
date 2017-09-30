@@ -27,6 +27,7 @@ private slots:
     void switchToLeftBrowser();
     void switchToRightBrowser();
     void handleCopy();
+    void handleMove();
     void handleDel();
     void handleNewFolder();
 

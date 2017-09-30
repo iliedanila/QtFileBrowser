@@ -19,6 +19,7 @@ signals:
     void gotFocus();
     void goToParent();
     void copy();
+    void move();
     void del();
     void newFolder();
 };
