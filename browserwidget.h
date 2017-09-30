@@ -36,6 +36,9 @@ signals:
     void del();
     void newFolder();
 
+public slots:
+    void toggleDriveMenu();
+
 private slots:
     void enterFolder(QModelIndex);
     void handleRootPathChanged(QString);
