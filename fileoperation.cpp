@@ -184,12 +184,13 @@ void FileOperation::move()
     // Copy folders (empty).
     while (foldersList.count() && !atomicCancel)
     {
-        auto folderPath = foldersList.last();
-        foldersList.pop_back();
-        tempFolderList.push_front(folderPath);
+        auto folderPath = foldersList.first();
+        foldersList.pop_front();
+        tempFolderList.push_back(folderPath);
 
         auto relativePathToRoot = folderPath.remove(rootFolder);
-        QDir dir(destination + "/" + relativePathToRoot);
+        QString destinationFolderPath(destination + relativePathToRoot);
+        QDir dir(destinationFolderPath);
         if (!dir.exists())
         {
             dir.mkpath(".");
@@ -207,7 +208,7 @@ void FileOperation::move()
         filesList.pop_front();
         QFileInfo sourceFileInfo(filePath);
         QString relativePathToRoot = sourceFileInfo.absoluteFilePath().remove(rootFolder);
-        QString destinationFilePath(destination + "/" + relativePathToRoot);
+        QString destinationFilePath(destination + relativePathToRoot);
 
         sourceFile.rename(destinationFilePath);
         filesMoved++;
