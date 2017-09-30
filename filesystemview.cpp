@@ -28,6 +28,10 @@ void FileSystemView::keyPressEvent(QKeyEvent *event)
     {
         emit copy();
     }
+    else if (event->key() == Qt::Key_F6)
+    {
+        emit move();
+    }
     else if (event->key() == Qt::Key_F8)
     {
         emit del();

@@ -130,6 +130,12 @@ void BrowserWidget::Connect()
 
     connected &= connect(
         ui->fileSystemView,
+        SIGNAL(move()),
+        this,
+        SIGNAL(move())) != Q_NULLPTR;
+
+    connected &= connect(
+        ui->fileSystemView,
         SIGNAL(del()),
         this,
         SIGNAL(del())) != Q_NULLPTR;
