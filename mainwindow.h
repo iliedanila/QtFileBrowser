@@ -16,6 +16,9 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+protected:
+    virtual void keyPressEvent(QKeyEvent *event) override;
+
 private:
     void CustomizeUI();
     void Connect();

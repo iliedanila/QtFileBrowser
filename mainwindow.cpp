@@ -5,6 +5,8 @@
 #include <QProgressDialog>
 #include <QProcess>
 #include <QInputDialog>
+#include <QKeyEvent>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
     :
@@ -20,6 +22,22 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_F1 && event->modifiers() == Qt::AltModifier)
+    {
+        ui->leftBrowser->toggleDriveMenu();
+    }
+    else if (event->key() == Qt::Key_F2 && event->modifiers() == Qt::AltModifier)
+    {
+        ui->rightBrowser->toggleDriveMenu();
+    }
+    else
+    {
+        QMainWindow::keyPressEvent(event);
+    }
 }
 
 void MainWindow::CustomizeUI()

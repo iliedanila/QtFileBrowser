@@ -177,6 +177,11 @@ void BrowserWidget::SelectFirstRow(bool directoryChanged)
     }
 }
 
+void BrowserWidget::toggleDriveMenu()
+{
+    ui->driveList->showPopup();
+}
+
 void BrowserWidget::enterFolder(QModelIndex index)
 {
     auto fileInfo = fileSystemModel->fileInfo(index);
