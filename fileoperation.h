@@ -40,6 +40,7 @@ protected:
 private:
     void copy();
     void del();
+    void move();
 
 private:
     OperationType operationType;

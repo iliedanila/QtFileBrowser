@@ -78,6 +78,24 @@ void MainWindow::Connect()
         SLOT(handleCopy())) != Q_NULLPTR;
 
     connected &= connect(
+        ui->moveButton,
+        SIGNAL(clicked()),
+        this,
+        SLOT(handleMove())) != Q_NULLPTR;
+
+    connected &= connect(
+        ui->leftBrowser,
+        SIGNAL(move()),
+        this,
+        SLOT(handleMove())) != Q_NULLPTR;
+
+    connected &= connect(
+        ui->rightBrowser,
+        SIGNAL(move()),
+        this,
+        SLOT(handleMove())) != Q_NULLPTR;
+
+    connected &= connect(
         ui->deleteButton,
         SIGNAL(pressed()),
         this,
@@ -160,6 +178,44 @@ void MainWindow::handleCopy()
         connect(dialog, SIGNAL(canceled()), copyOperation, SLOT(cancel()));
 
         copyOperation->start();
+        dialog->show();
+    }
+}
+
+void MainWindow::handleMove()
+{
+    QStringList filePaths;
+    QString rootFolder;
+    QString destination;
+    if (ui->leftBrowser->hasFocus())
+    {
+        filePaths = ui->leftBrowser->getSelected();
+        rootFolder = ui->leftBrowser->getRootPath();
+        destination = ui->rightBrowser->getRootPath();
+    }
+    if (ui->rightBrowser->hasFocus())
+    {
+        filePaths = ui->rightBrowser->getSelected();
+        rootFolder = ui->rightBrowser->getRootPath();
+        destination = ui->leftBrowser->getRootPath();
+    }
+
+    if (filePaths.count())
+    {
+        FileOperation* moveOperation = new FileOperation(FileOperation::eMove, rootFolder, filePaths, destination, this);
+
+        QProgressDialog* dialog = new QProgressDialog("Move files...", "Cancel", 0, 100, this);
+        dialog->setWindowModality(Qt::NonModal);
+
+        connect(moveOperation,
+                SIGNAL(setProgress(int)),
+                dialog,
+                SLOT(setValue(int)));
+        connect(moveOperation, SIGNAL(finished()), moveOperation, SLOT(deleteLater()));
+        connect(moveOperation, SIGNAL(finished()), dialog, SLOT(close()));
+        connect(dialog, SIGNAL(canceled()), moveOperation, SLOT(cancel()));
+
+        moveOperation->start();
         dialog->show();
     }
 }
