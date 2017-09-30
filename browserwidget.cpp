@@ -60,7 +60,7 @@ void BrowserWidget::CustomizeUI()
     fileSystemModel->setFilter(QDir::AllDirs | QDir::NoDot | QDir::Dirs | QDir::Files);
     ui->fileSystemView->setModel(fileSystemModel);
 
-    if (osType == "osx" /* || some linux*/)
+    if (osType == "osx" || osType == "fedora")
     {
         QString homePath = QDir::homePath();
         ui->currentPath->setText(homePath);
