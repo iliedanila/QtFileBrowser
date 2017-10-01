@@ -5,6 +5,8 @@
 #include <QDir>
 #include <QDirModel>
 #include <QStorageInfo>
+#include <QDesktopServices>
+#include <QUrl>
 
 BrowserWidget::BrowserWidget(QWidget *parent) :
     QWidget(parent),
@@ -96,7 +98,7 @@ void BrowserWidget::Connect()
         ui->fileSystemView,
         SIGNAL(doubleClicked(QModelIndex)),
         this,
-        SLOT(enterFolder(QModelIndex))) != Q_NULLPTR;
+        SLOT(open(QModelIndex))) != Q_NULLPTR;
 
     connected &= connect(
         fileSystemModel,
@@ -188,16 +190,23 @@ void BrowserWidget::toggleDriveMenu()
     ui->driveList->showPopup();
 }
 
-void BrowserWidget::enterFolder(QModelIndex index)
+void BrowserWidget::open(QModelIndex index)
 {
     auto fileInfo = fileSystemModel->fileInfo(index);
-    if (fileInfo.absoluteFilePath() != "/..")
+    if (fileInfo.isDir())
     {
-        ui->fileSystemView->setRootIndex(fileSystemModel->setRootPath(fileInfo.absoluteFilePath()));
+        if (fileInfo.absoluteFilePath() != "/..")
+        {
+            ui->fileSystemView->setRootIndex(fileSystemModel->setRootPath(fileInfo.absoluteFilePath()));
+        }
+        else
+        {
+            ui->fileSystemView->setRootIndex(fileSystemModel->setRootPath(""));
+        }
     }
     else
     {
-        ui->fileSystemView->setRootIndex(fileSystemModel->setRootPath(""));
+        QDesktopServices::openUrl(QUrl::fromLocalFile(fileInfo.absoluteFilePath()));
     }
 }
 
