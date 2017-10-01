@@ -42,6 +42,10 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
 void MainWindow::CustomizeUI()
 {
+    ui->leftDriveButton->setEnabled(false);
+    ui->rightDriveButton->setEnabled(false);
+    ui->viewButton->setEnabled(false);
+    ui->editButton->setEnabled(false);
 }
 
 void MainWindow::Connect()
@@ -61,7 +65,7 @@ void MainWindow::Connect()
 
     connected &= connect(
         ui->copyButton,
-        SIGNAL(pressed()),
+        SIGNAL(clicked()),
         this,
         SLOT(handleCopy())) != Q_NULLPTR;
 
@@ -97,7 +101,7 @@ void MainWindow::Connect()
 
     connected &= connect(
         ui->deleteButton,
-        SIGNAL(pressed()),
+        SIGNAL(clicked()),
         this,
         SLOT(handleDel())) != Q_NULLPTR;
 
