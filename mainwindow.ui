@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1216</width>
-    <height>896</height>
+    <width>640</width>
+    <height>480</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,7 +27,35 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QToolButton" name="viewButton">
+       <widget class="QPushButton" name="leftDriveButton">
+        <property name="text">
+         <string>F1 Left Drive</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="Line" name="line_7">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="rightDriveButton">
+        <property name="text">
+         <string>F2 Right Drive</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="Line" name="line_6">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="viewButton">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -47,7 +75,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="editButton">
+       <widget class="QPushButton" name="editButton">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -67,7 +95,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="copyButton">
+       <widget class="QPushButton" name="copyButton">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -87,7 +115,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="moveButton">
+       <widget class="QPushButton" name="moveButton">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -107,7 +135,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="newFolderButton">
+       <widget class="QPushButton" name="newFolderButton">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -127,7 +155,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="deleteButton">
+       <widget class="QPushButton" name="deleteButton">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -148,8 +176,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1216</width>
-     <height>20</height>
+     <width>640</width>
+     <height>22</height>
     </rect>
    </property>
   </widget>

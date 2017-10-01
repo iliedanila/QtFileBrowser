@@ -26,11 +26,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_F1 && event->modifiers() == Qt::AltModifier)
+    if (event->key() == Qt::Key_F1)
     {
         ui->leftBrowser->toggleDriveMenu();
     }
-    else if (event->key() == Qt::Key_F2 && event->modifiers() == Qt::AltModifier)
+    else if (event->key() == Qt::Key_F2)
     {
         ui->rightBrowser->toggleDriveMenu();
     }
@@ -42,6 +42,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
 void MainWindow::CustomizeUI()
 {
+    ui->viewButton->setEnabled(false);
+    ui->editButton->setEnabled(false);
 }
 
 void MainWindow::Connect()
@@ -60,8 +62,20 @@ void MainWindow::Connect()
         SLOT(switchToLeftBrowser())) != Q_NULLPTR;
 
     connected &= connect(
+        ui->leftDriveButton,
+        SIGNAL(clicked()),
+        ui->leftBrowser,
+        SLOT(toggleDriveMenu())) != Q_NULLPTR;
+
+    connected &= connect(
+        ui->rightDriveButton,
+        SIGNAL(clicked()),
+        ui->rightBrowser,
+        SLOT(toggleDriveMenu())) != Q_NULLPTR;
+
+    connected &= connect(
         ui->copyButton,
-        SIGNAL(pressed()),
+        SIGNAL(clicked()),
         this,
         SLOT(handleCopy())) != Q_NULLPTR;
 
@@ -97,7 +111,7 @@ void MainWindow::Connect()
 
     connected &= connect(
         ui->deleteButton,
-        SIGNAL(pressed()),
+        SIGNAL(clicked()),
         this,
         SLOT(handleDel())) != Q_NULLPTR;
 
