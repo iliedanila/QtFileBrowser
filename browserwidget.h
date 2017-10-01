@@ -41,7 +41,7 @@ public slots:
     void toggleDriveMenu();
 
 private slots:
-    void enterFolder(QModelIndex);
+    void open(QModelIndex);
     void handleRootPathChanged(QString);
     void handleSwitchMeRequest();
     void handleGotFocus();
