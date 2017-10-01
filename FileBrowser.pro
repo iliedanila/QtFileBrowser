@@ -42,3 +42,7 @@ FORMS += \
         mainwindow.ui \
     browserWidget.ui \
     drivelist.ui
+
+RESOURCES += \
+    qdarkstyle/style.qrc
+
