@@ -225,6 +225,7 @@ void BrowserWidget::customContextMenuRequested(QPoint position)
     {
         path = fileSystemModel->rootPath();
     }
+
     QMenu* menu = new QMenu(this);
     menu->addAction(new QAction(path, this));
     menu->popup(ui->fileSystemView->viewport()->mapToGlobal(position));
