@@ -20,10 +20,10 @@ class BrowserWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit BrowserWidget(QWidget *parent = 0);
+    explicit BrowserWidget(QWidget *parent = Q_NULLPTR);
     ~BrowserWidget();
-    QStringList getSelected();
-    QString getRootPath();
+    QStringList getSelected() const;
+    QString getRootPath() const;
 
 private:
     void CustomizeUI();

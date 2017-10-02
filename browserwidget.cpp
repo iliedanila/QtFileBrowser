@@ -7,6 +7,8 @@
 #include <QStorageInfo>
 #include <QDesktopServices>
 #include <QUrl>
+#include <QAbstractItemView>
+#include <QHeaderView>
 
 BrowserWidget::BrowserWidget(QWidget *parent) :
     QWidget(parent),
@@ -34,7 +36,7 @@ BrowserWidget::~BrowserWidget()
     delete ui;
 }
 
-QStringList BrowserWidget::getSelected()
+QStringList BrowserWidget::getSelected() const
 {
     QStringList filePaths;
     for (auto index : ui->fileSystemView->selectionModel()->selection().indexes())
@@ -47,7 +49,7 @@ QStringList BrowserWidget::getSelected()
     return filePaths;
 }
 
-QString BrowserWidget::getRootPath()
+QString BrowserWidget::getRootPath() const
 {
     return fileSystemModel->rootPath();
 }
@@ -82,6 +84,8 @@ void BrowserWidget::CustomizeUI()
     ui->fileSystemView->setAcceptDrops(true);
     ui->fileSystemView->setDropIndicatorShown(true);
     ui->fileSystemView->setDragDropMode(QAbstractItemView::DragDrop);
+    ui->fileSystemView->setSortingEnabled(true);
+    ui->fileSystemView->sortByColumn(0, Qt::AscendingOrder);
 
     ui->fileSystemView->horizontalHeader()->setStretchLastSection(true);
     ui->fileSystemView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -96,7 +100,7 @@ void BrowserWidget::Connect()
     bool connected = true;
 
     connected &= connect(ui->fileSystemView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(open(QModelIndex))) != Q_NULLPTR;
-    connected &= connect(fileSystemModel, SIGNAL(rootPathChanged(QString)), this, SLOT(handleRootPathChanged(QString))) != Q_NULLPTR;
+    connected &= connect(fileSystemModel, SIGNAL(directoryLoaded(QString)), this, SLOT(handleRootPathChanged(QString))) != Q_NULLPTR;
     connected &= connect(ui->fileSystemView, SIGNAL(switchMe()), this, SLOT(handleSwitchMeRequest())) != Q_NULLPTR;
     connected &= connect(ui->fileSystemView, SIGNAL(gotFocus()), this, SLOT(handleGotFocus())) != Q_NULLPTR;
     connected &= connect(ui->fileSystemView, SIGNAL(goToParent()), this, SLOT(goToParent())) != Q_NULLPTR;
@@ -114,8 +118,8 @@ void BrowserWidget::Connect()
 
 void BrowserWidget::SelectFirstRow(bool directoryChanged)
 {
-    auto indexes = ui->fileSystemView->selectionModel()->selection().indexes();
-    if (indexes.count() == 0 || directoryChanged)
+    if (directoryChanged ||
+        ui->fileSystemView->selectionModel()->selection().indexes().count() == 0)
     {
         ui->fileSystemView->clearSelection();
         ui->fileSystemView->selectRow(0);

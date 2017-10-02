@@ -20,6 +20,9 @@ public:
                               int column,
                               const QModelIndex &parent) override;
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+
+signals:
+    void dropFiles(QStringList, QString);
 };
 
 #endif // FILESYSTEMMODEL_H

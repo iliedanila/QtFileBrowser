@@ -70,14 +70,29 @@ bool FileSystemModel::dropMimeData(const QMimeData *data,
 
     QByteArray encodedData = data->data("application/filePaths");
     QDataStream stream(&encodedData, QIODevice::ReadOnly);
-    QList<QFileInfo> newItems;
-
+    QStringList filePaths;
     while (!stream.atEnd())
     {
         QString filePath;
         stream >> filePath;
-        newItems << QFileInfo(filePath);
+        filePaths << filePath;
     }
+
+    QString destinationPath;
+    if (parent.row() == -1)
+    {
+        destinationPath = rootPath();
+    }
+    else
+    {
+        auto destination = fileInfo(parent);
+        destinationPath = destination.isDir() ?
+            destination.absoluteFilePath() :
+            destination.dir().absolutePath();
+    }
+
+    emit dropFiles(filePaths, destinationPath);
+
     return true;
 }
 
