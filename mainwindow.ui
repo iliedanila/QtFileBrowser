@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
+    <width>728</width>
     <height>480</height>
    </rect>
   </property>
@@ -28,6 +28,12 @@
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QPushButton" name="leftDriveButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string>F1 Left Drive</string>
         </property>
@@ -42,6 +48,12 @@
       </item>
       <item>
        <widget class="QPushButton" name="rightDriveButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string>F2 Right Drive</string>
         </property>
@@ -176,8 +188,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>640</width>
-     <height>22</height>
+     <width>728</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>

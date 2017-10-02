@@ -32,7 +32,7 @@ void FileSystemView::keyPressEvent(QKeyEvent *event)
     {
         emit move();
     }
-    else if (event->key() == Qt::Key_F8)
+    else if (event->key() == Qt::Key_F8 || event->key() == Qt::Key_Delete)
     {
         emit del();
     }
