@@ -49,101 +49,24 @@ void MainWindow::CustomizeUI()
 void MainWindow::Connect()
 {
     bool connected = true;
-    connected &= connect(
-        ui->leftBrowser,
-        SIGNAL(switchMe()),
-        this,
-        SLOT(switchToRightBrowser())) != Q_NULLPTR;
 
-    connected &= connect(
-        ui->rightBrowser,
-        SIGNAL(switchMe()),
-        this,
-        SLOT(switchToLeftBrowser())) != Q_NULLPTR;
-
-    connected &= connect(
-        ui->leftDriveButton,
-        SIGNAL(clicked()),
-        ui->leftBrowser,
-        SLOT(toggleDriveMenu())) != Q_NULLPTR;
-
-    connected &= connect(
-        ui->rightDriveButton,
-        SIGNAL(clicked()),
-        ui->rightBrowser,
-        SLOT(toggleDriveMenu())) != Q_NULLPTR;
-
-    connected &= connect(
-        ui->copyButton,
-        SIGNAL(clicked()),
-        this,
-        SLOT(handleCopy())) != Q_NULLPTR;
-
-    connected &= connect(
-        ui->leftBrowser,
-        SIGNAL(copy()),
-        this,
-        SLOT(handleCopy())) != Q_NULLPTR;
-
-    connected &= connect(
-        ui->rightBrowser,
-        SIGNAL(copy()),
-        this,
-        SLOT(handleCopy())) != Q_NULLPTR;
-
-    connected &= connect(
-        ui->moveButton,
-        SIGNAL(clicked()),
-        this,
-        SLOT(handleMove())) != Q_NULLPTR;
-
-    connected &= connect(
-        ui->leftBrowser,
-        SIGNAL(move()),
-        this,
-        SLOT(handleMove())) != Q_NULLPTR;
-
-    connected &= connect(
-        ui->rightBrowser,
-        SIGNAL(move()),
-        this,
-        SLOT(handleMove())) != Q_NULLPTR;
-
-    connected &= connect(
-        ui->deleteButton,
-        SIGNAL(clicked()),
-        this,
-        SLOT(handleDel())) != Q_NULLPTR;
-
-    connected &= connect(
-        ui->leftBrowser,
-        SIGNAL(del()),
-        this,
-        SLOT(handleDel())) != Q_NULLPTR;
-
-    connected &= connect(
-        ui->rightBrowser,
-        SIGNAL(del()),
-        this,
-        SLOT(handleDel())) != Q_NULLPTR;
-
-    connected &= connect(
-        ui->newFolderButton,
-        SIGNAL(clicked()),
-        this,
-        SLOT(handleNewFolder())) != Q_NULLPTR;
-
-    connected &= connect(
-        ui->leftBrowser,
-        SIGNAL(newFolder()),
-        this,
-        SLOT(handleNewFolder())) != Q_NULLPTR;
-
-    connected &= connect(
-        ui->rightBrowser,
-        SIGNAL(newFolder()),
-        this,
-        SLOT(handleNewFolder())) != Q_NULLPTR;
+    connected &= connect(ui->leftBrowser, SIGNAL(switchMe()), this, SLOT(switchToRightBrowser())) != Q_NULLPTR;
+    connected &= connect(ui->rightBrowser, SIGNAL(switchMe()), this, SLOT(switchToLeftBrowser())) != Q_NULLPTR;
+    connected &= connect(ui->leftDriveButton, SIGNAL(clicked()), ui->leftBrowser, SLOT(toggleDriveMenu())) != Q_NULLPTR;
+    connected &= connect(ui->rightDriveButton, SIGNAL(clicked()), ui->rightBrowser, SLOT(toggleDriveMenu())) != Q_NULLPTR;
+    connected &= connect(ui->copyButton, SIGNAL(clicked()), this, SLOT(handleCopy())) != Q_NULLPTR;
+    connected &= connect(ui->leftBrowser, SIGNAL(copy()), this, SLOT(handleCopy())) != Q_NULLPTR;
+    connected &= connect(ui->rightBrowser, SIGNAL(copy()), this, SLOT(handleCopy())) != Q_NULLPTR;
+    connected &= connect(ui->moveButton, SIGNAL(clicked()), this, SLOT(handleMove())) != Q_NULLPTR;
+    connected &= connect(ui->leftBrowser, SIGNAL(move()), this, SLOT(handleMove())) != Q_NULLPTR;
+    connected &= connect(ui->rightBrowser, SIGNAL(move()), this, SLOT(handleMove())) != Q_NULLPTR;
+    connected &= connect(ui->deleteButton, SIGNAL(clicked()), this, SLOT(handleDel())) != Q_NULLPTR;
+    connected &= connect(ui->leftBrowser, SIGNAL(del()), this, SLOT(handleDel())) != Q_NULLPTR;
+    connected &= connect(ui->rightBrowser, SIGNAL(del()), this, SLOT(handleDel())) != Q_NULLPTR;
+    connected &= connect(ui->newFolderButton, SIGNAL(clicked()), this, SLOT(handleNewFolder())) != Q_NULLPTR;
+    connected &= connect(ui->leftBrowser, SIGNAL(newFolder()), this, SLOT(handleNewFolder())) != Q_NULLPTR;
+    connected &= connect(ui->rightBrowser, SIGNAL(newFolder()), this, SLOT(handleNewFolder())) != Q_NULLPTR;
+    connected &= connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close())) != Q_NULLPTR;
 
     Q_ASSERT(connected);
 }
