@@ -9,6 +9,7 @@
 #include <QUrl>
 #include <QAbstractItemView>
 #include <QHeaderView>
+#include <QMenu>
 
 BrowserWidget::BrowserWidget(QWidget *parent) :
     QWidget(parent),
@@ -77,7 +78,7 @@ void BrowserWidget::CustomizeUI()
     }
 
     ui->fileSystemView->verticalHeader()->hide();
-
+    ui->fileSystemView->setContextMenuPolicy(Qt::CustomContextMenu);
     ui->fileSystemView->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->fileSystemView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     ui->fileSystemView->setDragEnabled(true);
@@ -112,6 +113,7 @@ void BrowserWidget::Connect()
     connected &= connect(driveTimer, SIGNAL(timeout()), this, SLOT(populateDriveList())) != Q_NULLPTR;
     connected &= connect(ui->driveList, SIGNAL(currentIndexChanged(QString)), this, SLOT(setPath(QString))) != Q_NULLPTR;
     connected &= connect(ui->currentPath, SIGNAL(textChanged(QString)), this, SLOT(setPath(QString))) != Q_NULLPTR;
+    connected &= connect(ui->fileSystemView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(customContextMenuRequested(QPoint))) != Q_NULLPTR;
 
     Q_ASSERT(connected);
 }
@@ -212,4 +214,18 @@ void BrowserWidget::populateDriveList()
 
         checkPathNotAvailable();
     }
+}
+
+void BrowserWidget::customContextMenuRequested(QPoint position)
+{
+    auto index = ui->fileSystemView->indexAt(position);
+    auto path = fileSystemModel->fileInfo(index).absoluteFilePath();
+
+    if (!index.isValid())
+    {
+        path = fileSystemModel->rootPath();
+    }
+    QMenu* menu = new QMenu(this);
+    menu->addAction(new QAction(path, this));
+    menu->popup(ui->fileSystemView->viewport()->mapToGlobal(position));
 }

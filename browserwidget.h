@@ -50,6 +50,7 @@ private slots:
     void setHome();
     void checkPathNotAvailable();
     void populateDriveList();
+    void customContextMenuRequested(QPoint);
 
 private:
     Ui::BrowserWidget *ui;
