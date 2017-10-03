@@ -44,6 +44,7 @@ void MainWindow::CustomizeUI()
 {
     ui->viewButton->setEnabled(false);
     ui->editButton->setEnabled(false);
+    ui->leftBrowser->setFocus();
 }
 
 void MainWindow::Connect()

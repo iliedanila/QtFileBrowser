@@ -93,6 +93,8 @@ void BrowserWidget::CustomizeUI()
     ui->fileSystemView->setAlternatingRowColors(true);
     ui->fileSystemView->setShowGrid(false);
 
+    ui->showHiddenFilesButton->setChecked(false);
+
     setFocusProxy(ui->fileSystemView);
 }
 
@@ -114,6 +116,7 @@ void BrowserWidget::Connect()
     connected &= connect(ui->driveList, SIGNAL(currentIndexChanged(QString)), this, SLOT(setPath(QString))) != Q_NULLPTR;
     connected &= connect(ui->currentPath, SIGNAL(textChanged(QString)), this, SLOT(setPath(QString))) != Q_NULLPTR;
     connected &= connect(ui->fileSystemView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(customContextMenuRequested(QPoint))) != Q_NULLPTR;
+    connected &= connect(ui->showHiddenFilesButton, SIGNAL(toggled(bool)), this, SLOT(showHiddenFiles(bool))) != Q_NULLPTR;
 
     Q_ASSERT(connected);
 }
@@ -229,4 +232,24 @@ void BrowserWidget::customContextMenuRequested(QPoint position)
     QMenu* menu = new QMenu(this);
     menu->addAction(new QAction(path, this));
     menu->popup(ui->fileSystemView->viewport()->mapToGlobal(position));
+}
+
+void BrowserWidget::showHiddenFiles(bool show)
+{
+    QDir::Filters fileSystemFilter = fileSystemModel->filter();
+    QDir::Filters dirFilter = dirModel->filter();
+
+    if (show)
+    {
+        fileSystemFilter |= (QDir::Hidden | QDir::System);
+        dirFilter |= (QDir::Hidden | QDir::System);
+    }
+    else
+    {
+        fileSystemFilter &= (~(QDir::Hidden | QDir::System));
+        dirFilter &= (~(QDir::Hidden | QDir::System));
+    }
+
+    fileSystemModel->setFilter(fileSystemFilter);
+    dirModel->setFilter(dirFilter);
 }
