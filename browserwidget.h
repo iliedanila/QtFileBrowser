@@ -52,6 +52,7 @@ private slots:
     void populateDriveList();
     void customContextMenuRequested(QPoint);
     void showHiddenFiles(bool);
+    void matchDriveToPath(QString);
 
 private:
     Ui::BrowserWidget *ui;

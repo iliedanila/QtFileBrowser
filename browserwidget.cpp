@@ -104,6 +104,7 @@ void BrowserWidget::Connect()
 
     connected &= connect(ui->fileSystemView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(open(QModelIndex))) != Q_NULLPTR;
     connected &= connect(fileSystemModel, SIGNAL(directoryLoaded(QString)), this, SLOT(handleRootPathChanged(QString))) != Q_NULLPTR;
+    connected &= connect(fileSystemModel, SIGNAL(directoryLoaded(QString)), this, SLOT(matchDriveToPath(QString))) != Q_NULLPTR;
     connected &= connect(ui->fileSystemView, SIGNAL(switchMe()), this, SLOT(handleSwitchMeRequest())) != Q_NULLPTR;
     connected &= connect(ui->fileSystemView, SIGNAL(gotFocus()), this, SLOT(handleGotFocus())) != Q_NULLPTR;
     connected &= connect(ui->fileSystemView, SIGNAL(goToParent()), this, SLOT(goToParent())) != Q_NULLPTR;
@@ -252,4 +253,21 @@ void BrowserWidget::showHiddenFiles(bool show)
 
     fileSystemModel->setFilter(fileSystemFilter);
     dirModel->setFilter(dirFilter);
+}
+
+void BrowserWidget::matchDriveToPath(QString currentPath)
+{
+    if (currentPath.startsWith(ui->driveList->currentText()))
+    {
+        return;
+    }
+
+    for (auto index = 0; index < ui->driveList->count(); index++)
+    {
+        if (currentPath.startsWith(ui->driveList->itemText(index)))
+        {
+            ui->driveList->setCurrentIndex(index);
+            return;
+        }
+    }
 }
