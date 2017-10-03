@@ -257,17 +257,19 @@ void BrowserWidget::showHiddenFiles(bool show)
 
 void BrowserWidget::matchDriveToPath(QString currentPath)
 {
-    if (currentPath.startsWith(ui->driveList->currentText()))
-    {
-        return;
-    }
+    int maxDrivePath = 0;
+    int mathcIndex = -1;
 
     for (auto index = 0; index < ui->driveList->count(); index++)
     {
-        if (currentPath.startsWith(ui->driveList->itemText(index)))
+        QString drivePath = ui->driveList->itemText(index);
+        if (currentPath.startsWith(drivePath) && drivePath.size() > maxDrivePath)
         {
-            ui->driveList->setCurrentIndex(index);
-            return;
+            maxDrivePath = drivePath.size();
+            mathcIndex = index;
         }
     }
+
+    Q_ASSERT(mathcIndex != -1);
+    ui->driveList->setCurrentIndex(mathcIndex);
 }
