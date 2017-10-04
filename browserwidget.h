@@ -53,6 +53,7 @@ private slots:
     void customContextMenuRequested(QPoint);
     void showHiddenFiles(bool);
     void matchDriveToPath(QString);
+    void openExplorer(QString);
 
 private:
     Ui::BrowserWidget *ui;

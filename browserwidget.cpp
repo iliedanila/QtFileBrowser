@@ -10,6 +10,7 @@
 #include <QAbstractItemView>
 #include <QHeaderView>
 #include <QMenu>
+#include <QSignalMapper>
 
 BrowserWidget::BrowserWidget(QWidget *parent) :
     QWidget(parent),
@@ -222,17 +223,41 @@ void BrowserWidget::populateDriveList()
 
 void BrowserWidget::customContextMenuRequested(QPoint position)
 {
-    auto index = ui->fileSystemView->indexAt(position);
-    auto path = fileSystemModel->fileInfo(index).absoluteFilePath();
+    QModelIndex index = ui->fileSystemView->indexAt(position);
+    QFileInfo fileInfo;
+    QString path;
 
     if (!index.isValid())
     {
         path = fileSystemModel->rootPath();
+        fileInfo = QFileInfo(path);
+    }
+    else
+    {
+        fileInfo = fileSystemModel->fileInfo(index);
+        path = fileInfo.absoluteFilePath();
     }
 
     QMenu* menu = new QMenu(this);
-    menu->addAction(new QAction(path, this));
+
+    qDebug() << "Menu created: " << menu;
+
+    QAction* action = Q_NULLPTR;
+
+    if (fileInfo.isDir())
+    {
+        action = new QAction("Open in explorer.", menu);
+    }
+    else
+    {
+        action = new QAction("Open file location.", menu);
+    }
+
+    menu->addAction(action);
     menu->popup(ui->fileSystemView->viewport()->mapToGlobal(position));
+
+    connect(action, &QAction::triggered, [this, path]{ openExplorer(path); });
+    connect(menu, &QMenu::destroyed, [menu](){qDebug() << "Menu destroyed: " << menu; });
 }
 
 void BrowserWidget::showHiddenFiles(bool show)
@@ -272,4 +297,11 @@ void BrowserWidget::matchDriveToPath(QString currentPath)
 
     Q_ASSERT(mathcIndex != -1);
     ui->driveList->setCurrentIndex(mathcIndex);
+}
+
+void BrowserWidget::openExplorer(QString path)
+{
+    QFileInfo fileInfo(path);
+    QString pathToOpen = fileInfo.isDir() ? path : fileInfo.dir().absolutePath();
+    QDesktopServices::openUrl(QUrl::fromLocalFile(pathToOpen));
 }
