@@ -111,6 +111,10 @@ QVariant FileSystemModel::data(const QModelIndex &index, int role) const
         }
         return flags;
     }
+    else if (role == Qt::ToolTipRole && index.column() == 0)
+    {
+        return fileInfo(index).absoluteFilePath();
+    }
     else
     {
         return QFileSystemModel::data(index, role);
