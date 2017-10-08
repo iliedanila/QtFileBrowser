@@ -47,3 +47,9 @@ x64/Release/
 release/
 
 FileBrowser\.vcxproj\.user
+
+FileBrowser\.sln
+
+FileBrowser\.vcxproj
+
+FileBrowser\.vcxproj\.filters
