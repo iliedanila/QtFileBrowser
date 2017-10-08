@@ -2,6 +2,8 @@
 
 #include <QMimeData>
 #include <QVariant>
+#include <QFileIconProvider>
+#include <QDateTime>
 
 FileSystemModel::FileSystemModel(QObject *parent)
 :
@@ -101,7 +103,7 @@ QVariant FileSystemModel::data(const QModelIndex &index, int role) const
     if (role == Qt::TextAlignmentRole)
     {
         int flags;
-        if (index.column() == 0)
+        if (index.column() == eName)
         {
             flags = Qt::AlignLeft | Qt::AlignVCenter;
         }
@@ -111,13 +113,67 @@ QVariant FileSystemModel::data(const QModelIndex &index, int role) const
         }
         return flags;
     }
-    else if (role == Qt::ToolTipRole && index.column() == 0)
+    if (role == Qt::ToolTipRole && index.column() == eName)
     {
         return fileInfo(index).absoluteFilePath();
     }
-    else
+    if (role == Qt::DecorationRole && index.column() == eIcon)
     {
-        return QFileSystemModel::data(index, role);
+        return iconProvider()->icon(fileInfo(index));
+    }
+    if (role == Qt::DisplayRole)
+    {
+        auto idxFileInfo = fileInfo(index);
+
+        switch (index.column())
+        {
+        case eName:
+            return idxFileInfo.fileName();
+        case eSize:
+            return idxFileInfo.isDir() ? QVariant() : idxFileInfo.size();
+        case eType:
+            return idxFileInfo.isDir() ? "DIR" : idxFileInfo.completeSuffix();
+        case eDate:
+            return idxFileInfo.lastModified();
+        }
+    }
+
+    return QVariant();
+}
+
+int FileSystemModel::columnCount(const QModelIndex &parent) const
+{
+    Q_UNUSED(parent);
+
+    return eColumnCount;
+}
+
+QVariant FileSystemModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (orientation == Qt::Vertical)
+    {
+        return QFileSystemModel::headerData(section, orientation, role);
+    }
+
+    if (role != Qt::DisplayRole)
+    {
+        return QVariant();
+    }
+
+    switch(section)
+    {
+    case eIcon:
+        return "Icon";
+    case eName:
+        return "Name";
+    case eSize:
+        return "Size";
+    case eType:
+        return "Type";
+    case eDate:
+        return "Date Modified";
+    default:
+        return QVariant();
     }
 }
 
