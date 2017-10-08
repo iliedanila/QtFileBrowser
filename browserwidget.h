@@ -54,6 +54,7 @@ private slots:
     void showHiddenFiles(bool);
     void matchDriveToPath(QString);
     void openExplorer(QString);
+    void setColumnsWidth();
 
 private:
     Ui::BrowserWidget *ui;

@@ -98,22 +98,7 @@ void BrowserWidget::CustomizeUI()
     ui->showHiddenFilesButton->setChecked(false);
 
     setFocusProxy(ui->fileSystemView);
-
-    qint64 totalWidth = 0;
-    for (qint8 columnIndex = 0; columnIndex < FileSystemModel::eColumnCount; columnIndex++)
-    {
-        totalWidth += ui->fileSystemView->columnWidth(columnIndex);
-    }
-    qDebug() << "Total width: " << totalWidth;
-
-    QList<qint8> sizes;
-    sizes << 2 << 9 << 3 << 3 << 3;
-    qint8 totalSizes = 20;
-    for (qint8 columnIndex = 0; columnIndex < FileSystemModel::eDate; columnIndex++)
-    {
-        int newColumnWidth = sizes[columnIndex] * totalWidth / totalSizes;
-        ui->fileSystemView->setColumnWidth(columnIndex, newColumnWidth);
-    }
+    setColumnsWidth();
 }
 
 void BrowserWidget::Connect()
@@ -321,4 +306,22 @@ void BrowserWidget::openExplorer(QString path)
     QFileInfo fileInfo(path);
     QString pathToOpen = fileInfo.isDir() ? path : fileInfo.dir().absolutePath();
     QDesktopServices::openUrl(QUrl::fromLocalFile(pathToOpen));
+}
+
+void BrowserWidget::setColumnsWidth()
+{
+    qint64 totalWidth = 0;
+    for (qint8 columnIndex = 0; columnIndex < FileSystemModel::eColumnCount; columnIndex++)
+    {
+        totalWidth += ui->fileSystemView->columnWidth(columnIndex);
+    }
+
+    QList<qint8> sizes;
+    sizes << 2 << 9 << 3 << 3 << 3;
+    qint8 totalSizes = 20;
+    for (qint8 columnIndex = 0; columnIndex < FileSystemModel::eDate; columnIndex++)
+    {
+        int newColumnWidth = sizes[columnIndex] * totalWidth / totalSizes;
+        ui->fileSystemView->setColumnWidth(columnIndex, newColumnWidth);
+    }
 }
