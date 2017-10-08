@@ -128,7 +128,11 @@ QVariant FileSystemModel::data(const QModelIndex &index, int role) const
         switch (index.column())
         {
         case eName:
-            return idxFileInfo.fileName();
+            {
+                QString name = idxFileInfo.fileName();
+                QString path = idxFileInfo.absoluteFilePath();
+                return name.isEmpty() ? path : name;
+            }
         case eSize:
             return idxFileInfo.isDir() ? QVariant() : idxFileInfo.size();
         case eType:

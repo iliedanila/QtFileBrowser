@@ -26,11 +26,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_F1)
+    if (event->key() == Qt::Key_F1 && event->modifiers() == Qt::NoModifier)
     {
         ui->leftBrowser->toggleDriveMenu();
     }
-    else if (event->key() == Qt::Key_F2)
+    else if (event->key() == Qt::Key_F2 && event->modifiers() == Qt::NoModifier)
     {
         ui->rightBrowser->toggleDriveMenu();
     }

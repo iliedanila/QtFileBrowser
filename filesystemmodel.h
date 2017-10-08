@@ -7,6 +7,7 @@ class FileSystemModel : public QFileSystemModel
 {
     Q_OBJECT
 
+public:
     enum Columns
     {
         eIcon = 0,
@@ -17,7 +18,6 @@ class FileSystemModel : public QFileSystemModel
         eColumnCount
     };
 
-public:
     FileSystemModel(QObject *parent = Q_NULLPTR);
 
     virtual Qt::ItemFlags flags(const QModelIndex& index) const override;

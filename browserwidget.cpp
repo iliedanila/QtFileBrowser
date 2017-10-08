@@ -11,6 +11,7 @@
 #include <QHeaderView>
 #include <QMenu>
 #include <QSignalMapper>
+#include <QDebug>
 
 BrowserWidget::BrowserWidget(QWidget *parent) :
     QWidget(parent),
@@ -87,16 +88,32 @@ void BrowserWidget::CustomizeUI()
     ui->fileSystemView->setDropIndicatorShown(true);
     ui->fileSystemView->setDragDropMode(QAbstractItemView::DragDrop);
     ui->fileSystemView->setSortingEnabled(true);
-    ui->fileSystemView->sortByColumn(0, Qt::AscendingOrder);
+    ui->fileSystemView->sortByColumn(FileSystemModel::eName, Qt::AscendingOrder);
 
     ui->fileSystemView->horizontalHeader()->setStretchLastSection(true);
-    ui->fileSystemView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->fileSystemView->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
     ui->fileSystemView->setAlternatingRowColors(true);
     ui->fileSystemView->setShowGrid(false);
 
     ui->showHiddenFilesButton->setChecked(false);
 
     setFocusProxy(ui->fileSystemView);
+
+    qint64 totalWidth = 0;
+    for (qint8 columnIndex = 0; columnIndex < FileSystemModel::eColumnCount; columnIndex++)
+    {
+        totalWidth += ui->fileSystemView->columnWidth(columnIndex);
+    }
+    qDebug() << "Total width: " << totalWidth;
+
+    QList<qint8> sizes;
+    sizes << 2 << 9 << 3 << 3 << 3;
+    qint8 totalSizes = 20;
+    for (qint8 columnIndex = 0; columnIndex < FileSystemModel::eDate; columnIndex++)
+    {
+        int newColumnWidth = sizes[columnIndex] * totalWidth / totalSizes;
+        ui->fileSystemView->setColumnWidth(columnIndex, newColumnWidth);
+    }
 }
 
 void BrowserWidget::Connect()
