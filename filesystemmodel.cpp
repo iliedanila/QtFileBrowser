@@ -115,69 +115,11 @@ QVariant FileSystemModel::data(const QModelIndex &index, int role) const
     }
     if (role == Qt::ToolTipRole && index.column() == eName)
     {
-        return fileInfo(index).absoluteFilePath();
+        return fileInfo(index).fileName();
     }
-    if (role == Qt::DecorationRole && index.column() == eIcon)
+    else
     {
-        return iconProvider()->icon(fileInfo(index));
-    }
-    if (role == Qt::DisplayRole)
-    {
-        auto idxFileInfo = fileInfo(index);
-
-        switch (index.column())
-        {
-        case eName:
-            {
-                QString name = idxFileInfo.fileName();
-                QString path = idxFileInfo.absoluteFilePath();
-                return name.isEmpty() ? path : name;
-            }
-        case eSize:
-            return idxFileInfo.isDir() ? QVariant() : idxFileInfo.size();
-        case eType:
-            return idxFileInfo.isDir() ? "DIR" : idxFileInfo.completeSuffix();
-        case eDate:
-            return idxFileInfo.lastModified();
-        }
-    }
-
-    return QVariant();
-}
-
-int FileSystemModel::columnCount(const QModelIndex &parent) const
-{
-    Q_UNUSED(parent);
-
-    return eColumnCount;
-}
-
-QVariant FileSystemModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
-    if (orientation == Qt::Vertical)
-    {
-        return QFileSystemModel::headerData(section, orientation, role);
-    }
-
-    if (role != Qt::DisplayRole)
-    {
-        return QVariant();
-    }
-
-    switch(section)
-    {
-    case eIcon:
-        return "Icon";
-    case eName:
-        return "Name";
-    case eSize:
-        return "Size";
-    case eType:
-        return "Type";
-    case eDate:
-        return "Date Modified";
-    default:
-        return QVariant();
+        return QFileSystemModel::data(index, role);
     }
 }
 

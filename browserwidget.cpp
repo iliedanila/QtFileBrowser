@@ -316,12 +316,14 @@ void BrowserWidget::setColumnsWidth()
         totalWidth += ui->fileSystemView->columnWidth(columnIndex);
     }
 
+    qDebug() << "totalWidth: " << totalWidth;
     QList<qint8> sizes;
-    sizes << 2 << 9 << 3 << 3 << 3;
+    sizes << 11 << 3 << 3 << 3;
     qint8 totalSizes = 20;
-    for (qint8 columnIndex = 0; columnIndex < FileSystemModel::eDate; columnIndex++)
+    for (qint8 columnIndex = 0; columnIndex < FileSystemModel::eColumnCount; columnIndex++)
     {
         int newColumnWidth = sizes[columnIndex] * totalWidth / totalSizes;
+        qDebug() << "newColumnWidth: " << newColumnWidth;
         ui->fileSystemView->setColumnWidth(columnIndex, newColumnWidth);
     }
 }
