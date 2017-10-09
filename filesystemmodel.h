@@ -7,17 +7,16 @@ class FileSystemModel : public QFileSystemModel
 {
     Q_OBJECT
 
+public:
     enum Columns
     {
-        eIcon = 0,
-        eName,
+        eName = 0,
         eSize,
         eType,
         eDate,
         eColumnCount
     };
 
-public:
     FileSystemModel(QObject *parent = Q_NULLPTR);
 
     virtual Qt::ItemFlags flags(const QModelIndex& index) const override;
@@ -30,8 +29,6 @@ public:
                               int column,
                               const QModelIndex &parent) override;
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const override;
-    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
 signals:
     void dropFiles(QStringList, QString);

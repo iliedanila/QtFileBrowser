@@ -7,6 +7,7 @@
 #include <QInputDialog>
 #include <QKeyEvent>
 #include <QDebug>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     :
@@ -26,11 +27,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_F1)
+    if (event->key() == Qt::Key_F1 && event->modifiers() == Qt::NoModifier)
     {
         ui->leftBrowser->toggleDriveMenu();
     }
-    else if (event->key() == Qt::Key_F2)
+    else if (event->key() == Qt::Key_F2 && event->modifiers() == Qt::NoModifier)
     {
         ui->rightBrowser->toggleDriveMenu();
     }
@@ -100,6 +101,29 @@ void MainWindow::handleCopy()
         destination = ui->leftBrowser->getRootPath();
     }
 
+    QMessageBox* confirmMessage = new QMessageBox(this);
+    confirmMessage->setText("Copy file(s)...");
+
+    QString informativeString;
+    for (auto filePath : filePaths)
+    {
+        QFileInfo info(filePath);
+        QString name = info.fileName();
+        informativeString += ("    " + name + "\n");
+    }
+    informativeString += "\nto\n\n";
+    informativeString += ("    " + destination + "\n");
+
+    confirmMessage->setInformativeText(informativeString);
+    confirmMessage->setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+    confirmMessage->setDefaultButton(QMessageBox::Ok);
+    confirmMessage->setIcon(QMessageBox::Question);
+
+    if (confirmMessage->exec() == QMessageBox::Cancel)
+    {
+        return;
+    }
+
     if (filePaths.count())
     {
         FileOperation* copyOperation = new FileOperation(FileOperation::eCopy, rootFolder, filePaths, destination, this);
@@ -138,6 +162,29 @@ void MainWindow::handleMove()
         destination = ui->leftBrowser->getRootPath();
     }
 
+    QMessageBox* confirmMessage = new QMessageBox(this);
+    confirmMessage->setText("Move file(s)...");
+
+    QString informativeString;
+    for (auto filePath : filePaths)
+    {
+        QFileInfo info(filePath);
+        QString name = info.fileName();
+        informativeString += ("    " + name + "\n");
+    }
+    informativeString += "\nto\n\n";
+    informativeString += ("    " + destination + "\n");
+
+    confirmMessage->setInformativeText(informativeString);
+    confirmMessage->setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+    confirmMessage->setDefaultButton(QMessageBox::Ok);
+    confirmMessage->setIcon(QMessageBox::Question);
+
+    if (confirmMessage->exec() == QMessageBox::Cancel)
+    {
+        return;
+    }
+
     if (filePaths.count())
     {
         FileOperation* moveOperation = new FileOperation(FileOperation::eMove, rootFolder, filePaths, destination, this);
@@ -172,6 +219,29 @@ void MainWindow::handleDel()
     {
         filePaths = ui->rightBrowser->getSelected();
         rootFolder = ui->rightBrowser->getRootPath();
+    }
+
+    QMessageBox* confirmMessage = new QMessageBox(this);
+    confirmMessage->setText("Delete file(s)...");
+
+    QString informativeString;
+    for (auto filePath : filePaths)
+    {
+        QFileInfo info(filePath);
+        QString name = info.fileName();
+        informativeString += ("    " + name + "\n");
+    }
+    informativeString += "\nfrom\n\n";
+    informativeString += ("    " + rootFolder + "\n");
+
+    confirmMessage->setInformativeText(informativeString);
+    confirmMessage->setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+    confirmMessage->setDefaultButton(QMessageBox::Ok);
+    confirmMessage->setIcon(QMessageBox::Question);
+
+    if (confirmMessage->exec() == QMessageBox::Cancel)
+    {
+        return;
     }
 
     if (filePaths.count())
