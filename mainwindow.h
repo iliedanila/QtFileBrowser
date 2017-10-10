@@ -33,6 +33,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
+    QString darkTheme;
 };
 
 #endif // MAINWINDOW_H
