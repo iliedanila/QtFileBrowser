@@ -43,6 +43,13 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
 void MainWindow::CustomizeUI()
 {
+    QFile style(":qdarkstyle/style.qss");
+    if (style.open(QFile::ReadOnly | QFile::Text))
+    {
+        QTextStream textStream(&style);
+        darkTheme = textStream.readAll();
+    }
+
     ui->viewButton->setEnabled(false);
     ui->editButton->setEnabled(false);
     ui->leftBrowser->setFocus();
@@ -69,6 +76,16 @@ void MainWindow::Connect()
     connected &= connect(ui->leftBrowser, SIGNAL(newFolder()), this, SLOT(handleNewFolder())) != Q_NULLPTR;
     connected &= connect(ui->rightBrowser, SIGNAL(newFolder()), this, SLOT(handleNewFolder())) != Q_NULLPTR;
     connected &= connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close())) != Q_NULLPTR;
+    connected &= connect(ui->actionDark_Theme, &QAction::triggered, [this]{
+        dynamic_cast<QApplication*>(QApplication::instance())->setStyleSheet(darkTheme);
+        ui->actionDark_Theme->setChecked(true);
+        ui->actionOS_Theme->setChecked(false);
+    }) != Q_NULLPTR;
+    connected &= connect(ui->actionOS_Theme, &QAction::triggered, [this]{
+        dynamic_cast<QApplication*>(QApplication::instance())->setStyleSheet("");
+        ui->actionDark_Theme->setChecked(false);
+        ui->actionOS_Theme->setChecked(true);
+    }) != Q_NULLPTR;
 
     Q_ASSERT(connected);
 }
