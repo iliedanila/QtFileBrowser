@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "findfileswizzard.h"
 
 #include <QDir>
 #include <QProgressDialog>
@@ -50,7 +51,6 @@ void MainWindow::CustomizeUI()
         darkTheme = textStream.readAll();
     }
 
-    ui->viewButton->setEnabled(false);
     ui->editButton->setEnabled(false);
     ui->leftBrowser->setFocus();
 }
@@ -63,6 +63,7 @@ void MainWindow::Connect()
     connected &= connect(ui->rightBrowser, SIGNAL(switchMe()), this, SLOT(switchToLeftBrowser())) != Q_NULLPTR;
     connected &= connect(ui->leftDriveButton, SIGNAL(clicked()), ui->leftBrowser, SLOT(toggleDriveMenu())) != Q_NULLPTR;
     connected &= connect(ui->rightDriveButton, SIGNAL(clicked()), ui->rightBrowser, SLOT(toggleDriveMenu())) != Q_NULLPTR;
+    connected &= connect(ui->searchButton, SIGNAL(clicked()), this, SLOT(handleSearch())) != Q_NULLPTR;
     connected &= connect(ui->copyButton, SIGNAL(clicked()), this, SLOT(handleCopy())) != Q_NULLPTR;
     connected &= connect(ui->leftBrowser, SIGNAL(copy()), this, SLOT(handleCopy())) != Q_NULLPTR;
     connected &= connect(ui->rightBrowser, SIGNAL(copy()), this, SLOT(handleCopy())) != Q_NULLPTR;
@@ -98,6 +99,12 @@ void MainWindow::switchToLeftBrowser()
 void MainWindow::switchToRightBrowser()
 {
     ui->rightBrowser->setFocus();
+}
+
+void MainWindow::handleSearch()
+{
+    FindFilesWizzard* wizzard = new FindFilesWizzard(this);
+    wizzard->show();
 }
 
 void MainWindow::handleCopy()

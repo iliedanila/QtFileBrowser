@@ -29,19 +29,27 @@ SOURCES += \
     filesystemview.cpp \
     browserwidget.cpp \
     filesystemmodel.cpp \
-    fileoperation.cpp
+    fileoperation.cpp \
+    findfilessettings.cpp \
+    findfilesresults.cpp \
+    findfileswizzard.cpp
 
 HEADERS += \
         mainwindow.h \
     filesystemview.h \
     browserwidget.h \
     filesystemmodel.h \
-    fileoperation.h
+    fileoperation.h \
+    findfilessettings.h \
+    findfilesresults.h \
+    findfileswizzard.h
 
 FORMS += \
         mainwindow.ui \
     browserWidget.ui \
-    drivelist.ui
+    drivelist.ui \
+    findfilessettings.ui \
+    findfilesresults.ui
 
 RESOURCES += \
     qdarkstyle/style.qrc

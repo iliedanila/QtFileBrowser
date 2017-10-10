@@ -67,7 +67,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="viewButton">
+       <widget class="QPushButton" name="searchButton">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -75,7 +75,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>F3 View</string>
+         <string>F3 Search</string>
         </property>
        </widget>
       </item>
