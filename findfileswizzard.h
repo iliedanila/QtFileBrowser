@@ -11,7 +11,11 @@ class FindFilesWizzard : public QWizard
     Q_OBJECT
 
 public:
-    explicit FindFilesWizzard(QWidget *parent = Q_NULLPTR);
+    explicit FindFilesWizzard(const QString& rootFolder, QWidget *parent = Q_NULLPTR);
+    ~FindFilesWizzard();
+
+protected:
+    void initializePage(int id) override;
 
 private:
     FindFilesSettings* settings;

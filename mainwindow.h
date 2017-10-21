@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "fileoperation.h"
+#include "browserwidget.h"
 
 namespace Ui {
     class MainWindow;
@@ -36,6 +37,7 @@ private:
     Ui::MainWindow *ui;
 
     QString darkTheme;
+    BrowserWidget* lastActiveBrowser;   // no ownership.
 };
 
 #endif // MAINWINDOW_H

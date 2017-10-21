@@ -12,11 +12,15 @@ class FindFilesSettings : public QWizardPage
     Q_OBJECT
 
 public:
-    explicit FindFilesSettings(QWidget *parent = 0);
+    explicit FindFilesSettings(const QString& rootFolder, QWidget *parent = Q_NULLPTR);
     ~FindFilesSettings();
 
 private:
+    void CustomizeUI() const;
+    void Connect();
+
     Ui::FindFilesSettings *ui;
+    QString rootFolder;
 };
 
 #endif // FINDFILESSETTINGS_H
