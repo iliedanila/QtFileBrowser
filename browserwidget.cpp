@@ -177,6 +177,7 @@ void BrowserWidget::handleSwitchMeRequest()
 void BrowserWidget::handleGotFocus()
 {
     SelectFirstRow(false);
+    emit gotFocus();
 }
 
 void BrowserWidget::goToParent()

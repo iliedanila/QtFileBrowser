@@ -37,6 +37,7 @@ signals:
     void move();
     void del();
     void newFolder();
+    void gotFocus();
 
 public slots:
     void toggleDriveMenu();

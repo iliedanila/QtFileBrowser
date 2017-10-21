@@ -63,6 +63,7 @@ void MainWindow::Connect()
     bool connected = true;
 
     connected &= connect(ui->leftBrowser, SIGNAL(switchMe()), this, SLOT(switchToRightBrowser())) != Q_NULLPTR;
+    connected &= connect(ui->leftBrowser, &BrowserWidget::gotFocus, [this]{ lastActiveBrowser = ui->leftBrowser;}) != Q_NULLPTR;
     connected &= connect(ui->leftBrowser, SIGNAL(search()), this, SLOT(handleSearch())) != Q_NULLPTR;
     connected &= connect(ui->leftBrowser, SIGNAL(copy()), this, SLOT(handleCopy())) != Q_NULLPTR;
     connected &= connect(ui->leftBrowser, SIGNAL(move()), this, SLOT(handleMove())) != Q_NULLPTR;
@@ -70,6 +71,7 @@ void MainWindow::Connect()
     connected &= connect(ui->leftBrowser, SIGNAL(newFolder()), this, SLOT(handleNewFolder())) != Q_NULLPTR;
 
     connected &= connect(ui->rightBrowser, SIGNAL(switchMe()), this, SLOT(switchToLeftBrowser())) != Q_NULLPTR;
+    connected &= connect(ui->rightBrowser, &BrowserWidget::gotFocus, [this]{ lastActiveBrowser = ui->rightBrowser;}) != Q_NULLPTR;
     connected &= connect(ui->rightBrowser, SIGNAL(search()), this, SLOT(handleSearch())) != Q_NULLPTR;
     connected &= connect(ui->rightBrowser, SIGNAL(copy()), this, SLOT(handleCopy())) != Q_NULLPTR;
     connected &= connect(ui->rightBrowser, SIGNAL(move()), this, SLOT(handleMove())) != Q_NULLPTR;
@@ -102,13 +104,11 @@ void MainWindow::Connect()
 
 void MainWindow::switchToLeftBrowser()
 {
-    lastActiveBrowser = ui->leftBrowser;
     ui->leftBrowser->setFocus();
 }
 
 void MainWindow::switchToRightBrowser()
 {
-    lastActiveBrowser = ui->rightBrowser;
     ui->rightBrowser->setFocus();
 }
 
