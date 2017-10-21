@@ -28,6 +28,10 @@ void FileSystemView::keyPressEvent(QKeyEvent *event)
     {
         emit goToParent();
     }
+    else if (event->key() == Qt::Key_F3)
+    {
+        emit search();
+    }
     else if (event->key() == Qt::Key_F5)
     {
         emit copy();
@@ -56,7 +60,7 @@ void FileSystemView::focusInEvent(QFocusEvent *event)
     emit gotFocus();
 }
 
-void FileSystemView::resizeEvent(QResizeEvent* event)
+void FileSystemView::resizeEvent(QResizeEvent* /*event*/)
 {
     setColumnsWidth();
 }

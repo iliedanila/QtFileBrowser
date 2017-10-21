@@ -32,6 +32,7 @@ private:
 
 signals:
     void switchMe();
+    void search();
     void copy();
     void move();
     void del();

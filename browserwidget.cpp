@@ -110,6 +110,7 @@ void BrowserWidget::Connect()
     connected &= connect(ui->fileSystemView, SIGNAL(switchMe()), this, SLOT(handleSwitchMeRequest())) != Q_NULLPTR;
     connected &= connect(ui->fileSystemView, SIGNAL(gotFocus()), this, SLOT(handleGotFocus())) != Q_NULLPTR;
     connected &= connect(ui->fileSystemView, SIGNAL(goToParent()), this, SLOT(goToParent())) != Q_NULLPTR;
+    connected &= connect(ui->fileSystemView, SIGNAL(search()), this, SIGNAL(search())) != Q_NULLPTR;
     connected &= connect(ui->fileSystemView, SIGNAL(copy()), this, SIGNAL(copy())) != Q_NULLPTR;
     connected &= connect(ui->fileSystemView, SIGNAL(move()), this, SIGNAL(move())) != Q_NULLPTR;
     connected &= connect(ui->fileSystemView, SIGNAL(del()), this, SIGNAL(del())) != Q_NULLPTR;

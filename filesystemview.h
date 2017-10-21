@@ -19,6 +19,7 @@ signals:
     void switchMe();
     void gotFocus();
     void goToParent();
+    void search();
     void copy();
     void move();
     void del();
