@@ -105,8 +105,6 @@ void BrowserWidget::Connect()
     bool connected = true;
 
     connected &= connect(ui->fileSystemView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(open(QModelIndex))) != Q_NULLPTR;
-    connected &= connect(fileSystemModel, SIGNAL(directoryLoaded(QString)), this, SLOT(handleRootPathChanged(QString))) != Q_NULLPTR;
-    connected &= connect(fileSystemModel, SIGNAL(directoryLoaded(QString)), this, SLOT(matchDriveToPath(QString))) != Q_NULLPTR;
     connected &= connect(ui->fileSystemView, SIGNAL(switchMe()), this, SLOT(handleSwitchMeRequest())) != Q_NULLPTR;
     connected &= connect(ui->fileSystemView, SIGNAL(gotFocus()), this, SLOT(handleGotFocus())) != Q_NULLPTR;
     connected &= connect(ui->fileSystemView, SIGNAL(goToParent()), this, SLOT(goToParent())) != Q_NULLPTR;
@@ -115,12 +113,17 @@ void BrowserWidget::Connect()
     connected &= connect(ui->fileSystemView, SIGNAL(move()), this, SIGNAL(move())) != Q_NULLPTR;
     connected &= connect(ui->fileSystemView, SIGNAL(del()), this, SIGNAL(del())) != Q_NULLPTR;
     connected &= connect(ui->fileSystemView, SIGNAL(newFolder()), this, SIGNAL(newFolder())) != Q_NULLPTR;
+    connected &= connect(ui->fileSystemView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(customContextMenuRequested(QPoint))) != Q_NULLPTR;
+
     connected &= connect(ui->homeButton, SIGNAL(clicked()), this, SLOT(setHome())) != Q_NULLPTR;
-    connected &= connect(driveTimer, SIGNAL(timeout()), this, SLOT(populateDriveList())) != Q_NULLPTR;
     connected &= connect(ui->driveList, SIGNAL(currentIndexChanged(QString)), this, SLOT(setPath(QString))) != Q_NULLPTR;
     connected &= connect(ui->currentPath, SIGNAL(textChanged(QString)), this, SLOT(setPath(QString))) != Q_NULLPTR;
-    connected &= connect(ui->fileSystemView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(customContextMenuRequested(QPoint))) != Q_NULLPTR;
     connected &= connect(ui->showHiddenFilesButton, SIGNAL(toggled(bool)), this, SLOT(showHiddenFiles(bool))) != Q_NULLPTR;
+
+    connected &= connect(fileSystemModel, SIGNAL(directoryLoaded(QString)), this, SLOT(handleRootPathChanged(QString))) != Q_NULLPTR;
+    connected &= connect(fileSystemModel, SIGNAL(directoryLoaded(QString)), this, SLOT(matchDriveToPath(QString))) != Q_NULLPTR;
+
+    connected &= connect(driveTimer, SIGNAL(timeout()), this, SLOT(populateDriveList())) != Q_NULLPTR;
 
     Q_ASSERT(connected);
 }
