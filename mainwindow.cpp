@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "findfileswizzard.h"
 #include "fileoperation.h"
 
 #include <QDir>
@@ -54,7 +53,6 @@ void MainWindow::CustomizeUI()
         darkTheme = textStream.readAll();
     }
 
-    ui->editButton->setEnabled(false);
     ui->leftBrowser->setFocus();
 }
 
@@ -114,9 +112,7 @@ void MainWindow::switchToRightBrowser()
 
 void MainWindow::handleSearch()
 {
-    FindFilesWizzard* wizzard = new FindFilesWizzard(lastActiveBrowser->getRootPath(), this);
-    wizzard->setWindowModality(Qt::WindowModal);
-    wizzard->show();
+
 }
 
 void MainWindow::handleCopy()

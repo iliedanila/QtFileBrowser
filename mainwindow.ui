@@ -87,7 +87,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="editButton">
+       <widget class="QPushButton" name="openButton">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -95,7 +95,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>F4 Edit</string>
+         <string>F4 Open</string>
         </property>
        </widget>
       </item>
@@ -189,7 +189,7 @@
      <x>0</x>
      <y>0</y>
      <width>956</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
