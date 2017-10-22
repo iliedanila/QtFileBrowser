@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "fileoperation.h"
 #include "browserwidget.h"
+#include "findfilesdialog.h"
 
 namespace Ui {
     class MainWindow;
@@ -38,6 +39,7 @@ private:
 
     QString darkTheme;
     BrowserWidget* lastActiveBrowser;   // no ownership.
+    FindFilesDialog* findFiles;
 };
 
 #endif // MAINWINDOW_H

@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     lastActiveBrowser = ui->leftBrowser;
+    findFiles = new FindFilesDialog(this);
 
     CustomizeUI();
     Connect();
@@ -112,7 +113,7 @@ void MainWindow::switchToRightBrowser()
 
 void MainWindow::handleSearch()
 {
-
+    findFiles->show();
 }
 
 void MainWindow::handleCopy()
