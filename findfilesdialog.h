@@ -15,6 +15,8 @@ public:
     explicit FindFilesDialog(QWidget *parent = 0);
     ~FindFilesDialog();
 
+    void setDirectory(const QString& aDirectory);
+
 private:
     void CustomizeUI();
     void Connect();

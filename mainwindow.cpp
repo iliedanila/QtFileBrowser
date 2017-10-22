@@ -114,6 +114,7 @@ void MainWindow::switchToRightBrowser()
 
 void MainWindow::handleSearch()
 {
+    findFiles->setDirectory(lastActiveBrowser->getRootPath());
     findFiles->show();
 }
 
