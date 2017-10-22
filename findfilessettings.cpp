@@ -20,8 +20,9 @@ FindFilesSettings::~FindFilesSettings()
     delete ui;
 }
 
-void FindFilesSettings::CustomizeUI() const
+void FindFilesSettings::CustomizeUI()
 {
+    setTitle("Customize search parameters:");
     ui->findTextComboBox->setEnabled(false);
     ui->searchInComboBox->setEditText(/*QDir::toNativeSeparators(*/rootFolder/*)*/);
 }

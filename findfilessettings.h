@@ -16,7 +16,7 @@ public:
     ~FindFilesSettings();
 
 private:
-    void CustomizeUI() const;
+    void CustomizeUI();
     void Connect();
 
     Ui::FindFilesSettings *ui;

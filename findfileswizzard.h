@@ -18,6 +18,8 @@ protected:
     void initializePage(int id) override;
 
 private:
+    void CustomizeUI();
+
     FindFilesSettings* settings;
     FindFilesResults* results;
 };
