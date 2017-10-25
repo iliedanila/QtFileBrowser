@@ -1,6 +1,10 @@
 #include "filesystemview.h"
 
 #include <QKeyEvent>
+#include "filesystemmodel.h"
+
+static const QList<int> columnsFactor = { 10, 3, 3, 4 };
+static const int totalColumnsFactor = 20;
 
 FileSystemView::FileSystemView(QWidget *parent)
 :
@@ -23,6 +27,10 @@ void FileSystemView::keyPressEvent(QKeyEvent *event)
     else if (event->key() == Qt::Key_Backspace)
     {
         emit goToParent();
+    }
+    else if (event->key() == Qt::Key_F3)
+    {
+        emit search();
     }
     else if (event->key() == Qt::Key_F5)
     {
@@ -50,4 +58,20 @@ void FileSystemView::focusInEvent(QFocusEvent *event)
 {
     QTableView::focusInEvent(event);
     emit gotFocus();
+}
+
+void FileSystemView::resizeEvent(QResizeEvent* /*event*/)
+{
+    setColumnsWidth();
+}
+
+void FileSystemView::setColumnsWidth()
+{
+    Q_ASSERT(columnsFactor.size() == FileSystemModel::eColumnCount);
+
+    for (auto index = 0; index < columnsFactor.size(); index++)
+    {
+        const int newColumnWidth = columnsFactor[index] * width() / totalColumnsFactor;
+        setColumnWidth(index, newColumnWidth);
+    }
 }

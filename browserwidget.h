@@ -32,10 +32,12 @@ private:
 
 signals:
     void switchMe();
+    void search();
     void copy();
     void move();
     void del();
     void newFolder();
+    void gotFocus();
 
 public slots:
     void toggleDriveMenu();
@@ -54,7 +56,6 @@ private slots:
     void showHiddenFiles(bool);
     void matchDriveToPath(QString);
     void openExplorer(QString);
-    void setColumnsWidth();
 
 private:
     Ui::BrowserWidget *ui;

@@ -61,7 +61,7 @@ void BrowserWidget::CustomizeUI()
 {
     populateDriveList();
 
-    QString osType = QSysInfo::productType();
+    const QString osType = QSysInfo::productType();
 
     ui->homeButton->setIcon(iconProvider.icon(QFileIconProvider::Computer));
     fileSystemModel->setFilter(QDir::AllDirs | QDir::NoDot | QDir::Dirs | QDir::Files);
@@ -98,7 +98,6 @@ void BrowserWidget::CustomizeUI()
     ui->showHiddenFilesButton->setChecked(false);
 
     setFocusProxy(ui->fileSystemView);
-    setColumnsWidth();
 }
 
 void BrowserWidget::Connect()
@@ -106,21 +105,25 @@ void BrowserWidget::Connect()
     bool connected = true;
 
     connected &= connect(ui->fileSystemView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(open(QModelIndex))) != Q_NULLPTR;
-    connected &= connect(fileSystemModel, SIGNAL(directoryLoaded(QString)), this, SLOT(handleRootPathChanged(QString))) != Q_NULLPTR;
-    connected &= connect(fileSystemModel, SIGNAL(directoryLoaded(QString)), this, SLOT(matchDriveToPath(QString))) != Q_NULLPTR;
     connected &= connect(ui->fileSystemView, SIGNAL(switchMe()), this, SLOT(handleSwitchMeRequest())) != Q_NULLPTR;
     connected &= connect(ui->fileSystemView, SIGNAL(gotFocus()), this, SLOT(handleGotFocus())) != Q_NULLPTR;
     connected &= connect(ui->fileSystemView, SIGNAL(goToParent()), this, SLOT(goToParent())) != Q_NULLPTR;
+    connected &= connect(ui->fileSystemView, SIGNAL(search()), this, SIGNAL(search())) != Q_NULLPTR;
     connected &= connect(ui->fileSystemView, SIGNAL(copy()), this, SIGNAL(copy())) != Q_NULLPTR;
     connected &= connect(ui->fileSystemView, SIGNAL(move()), this, SIGNAL(move())) != Q_NULLPTR;
     connected &= connect(ui->fileSystemView, SIGNAL(del()), this, SIGNAL(del())) != Q_NULLPTR;
     connected &= connect(ui->fileSystemView, SIGNAL(newFolder()), this, SIGNAL(newFolder())) != Q_NULLPTR;
+    connected &= connect(ui->fileSystemView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(customContextMenuRequested(QPoint))) != Q_NULLPTR;
+
     connected &= connect(ui->homeButton, SIGNAL(clicked()), this, SLOT(setHome())) != Q_NULLPTR;
-    connected &= connect(driveTimer, SIGNAL(timeout()), this, SLOT(populateDriveList())) != Q_NULLPTR;
     connected &= connect(ui->driveList, SIGNAL(currentIndexChanged(QString)), this, SLOT(setPath(QString))) != Q_NULLPTR;
     connected &= connect(ui->currentPath, SIGNAL(textChanged(QString)), this, SLOT(setPath(QString))) != Q_NULLPTR;
-    connected &= connect(ui->fileSystemView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(customContextMenuRequested(QPoint))) != Q_NULLPTR;
     connected &= connect(ui->showHiddenFilesButton, SIGNAL(toggled(bool)), this, SLOT(showHiddenFiles(bool))) != Q_NULLPTR;
+
+    connected &= connect(fileSystemModel, SIGNAL(directoryLoaded(QString)), this, SLOT(handleRootPathChanged(QString))) != Q_NULLPTR;
+    connected &= connect(fileSystemModel, SIGNAL(directoryLoaded(QString)), this, SLOT(matchDriveToPath(QString))) != Q_NULLPTR;
+
+    connected &= connect(driveTimer, SIGNAL(timeout()), this, SLOT(populateDriveList())) != Q_NULLPTR;
 
     Q_ASSERT(connected);
 }
@@ -174,6 +177,7 @@ void BrowserWidget::handleSwitchMeRequest()
 void BrowserWidget::handleGotFocus()
 {
     SelectFirstRow(false);
+    emit gotFocus();
 }
 
 void BrowserWidget::goToParent()
@@ -306,24 +310,4 @@ void BrowserWidget::openExplorer(QString path)
     QFileInfo fileInfo(path);
     QString pathToOpen = fileInfo.isDir() ? path : fileInfo.dir().absolutePath();
     QDesktopServices::openUrl(QUrl::fromLocalFile(pathToOpen));
-}
-
-void BrowserWidget::setColumnsWidth()
-{
-    qint64 totalWidth = 0;
-    for (qint8 columnIndex = 0; columnIndex < FileSystemModel::eColumnCount; columnIndex++)
-    {
-        totalWidth += ui->fileSystemView->columnWidth(columnIndex);
-    }
-
-    qDebug() << "totalWidth: " << totalWidth;
-    QList<qint8> sizes;
-    sizes << 11 << 3 << 3 << 3;
-    qint8 totalSizes = 20;
-    for (qint8 columnIndex = 0; columnIndex < FileSystemModel::eColumnCount; columnIndex++)
-    {
-        int newColumnWidth = sizes[columnIndex] * totalWidth / totalSizes;
-        qDebug() << "newColumnWidth: " << newColumnWidth;
-        ui->fileSystemView->setColumnWidth(columnIndex, newColumnWidth);
-    }
 }
