@@ -41,23 +41,7 @@ void FindFilesDialog::Connect()
 {
     bool connected = true;
 
-    connected &= connect(ui->browseButton, &QPushButton::clicked, [this]
-    {
-        QString directory = QFileDialog::getExistingDirectory(
-            this,
-            "Select Directory",
-            ui->searchInComboBox->currentText());
-
-        if (!directory.isEmpty())
-        {
-            if (ui->searchInComboBox->findText(directory) == -1)
-            {
-                ui->searchInComboBox->addItem(directory);
-            }
-            ui->searchInComboBox->setCurrentIndex(ui->searchInComboBox->findText(directory));
-        }
-    }) != Q_NULLPTR;
-
+    connected &= connect(ui->browseButton, &QPushButton::clicked, this, &FindFilesDialog::browse) != Q_NULLPTR;
     connected &= connect(ui->finishButton, &QPushButton::clicked, [this]{ hide(); }) != Q_NULLPTR;
     connected &= connect(ui->findTextCheckBox, &QCheckBox::toggled, [this](bool checked)
     {
@@ -65,4 +49,21 @@ void FindFilesDialog::Connect()
     }) != Q_NULLPTR;
 
     Q_ASSERT(connected);
+}
+
+void FindFilesDialog::browse()
+{
+    QString directory = QFileDialog::getExistingDirectory(
+        this,
+        "Select Directory",
+        ui->searchInComboBox->currentText());
+
+    if (!directory.isEmpty())
+    {
+        if (ui->searchInComboBox->findText(directory) == -1)
+        {
+            ui->searchInComboBox->addItem(directory);
+        }
+        ui->searchInComboBox->setCurrentIndex(ui->searchInComboBox->findText(directory));
+    }
 }

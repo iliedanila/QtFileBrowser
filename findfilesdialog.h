@@ -20,6 +20,7 @@ public:
 private:
     void CustomizeUI();
     void Connect();
+    void browse();
 
     Ui::FindFilesDialog *ui;
 };
