@@ -98,6 +98,7 @@ void MainWindow::Connect()
         ui->actionDark_Theme->setChecked(false);
         ui->actionOS_Theme->setChecked(true);
     }) != Q_NULLPTR;
+    connected &= connect(findFiles, &FindFilesDialog::rejected, findFiles, &FindFilesDialog::cancel) != Q_NULLPTR;
 
     Q_ASSERT(connected);
 }

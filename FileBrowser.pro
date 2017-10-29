@@ -30,7 +30,9 @@ SOURCES += \
     browserwidget.cpp \
     filesystemmodel.cpp \
     fileoperation.cpp \
-    findfilesdialog.cpp
+    findfilesdialog.cpp \
+    findfilesoperation.cpp \
+    findresultsmodel.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -38,7 +40,9 @@ HEADERS += \
     browserwidget.h \
     filesystemmodel.h \
     fileoperation.h \
-    findfilesdialog.h
+    findfilesdialog.h \
+    findfilesoperation.h \
+    findresultsmodel.h
 
 FORMS += \
         mainwindow.ui \
