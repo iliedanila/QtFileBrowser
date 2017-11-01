@@ -16,9 +16,11 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+    QString fileName(const int row) const { return resultList.at(row); }
 
 public slots:
     void foundMatch(QString);
+    void clear();
 
 private:
     QStringList resultList;

@@ -20,6 +20,10 @@ public:
 
     void setDirectory(const QString& aDirectory);
 
+protected:
+    void focusInEvent(QFocusEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
+
 public slots:
     void cancel();
 
@@ -28,6 +32,7 @@ private slots:
     void operationFinished();
     void processedEntriesCount(int);
     void entriesCountChanged(int);
+    void openFileLocation(const QModelIndex&) const;
 
 private:
     void CustomizeUI();
@@ -39,6 +44,7 @@ private:
     FindResultsModel* resultsModel;
     int processedEntries;
     int totalEntries;
+    bool searchRunning;
 };
 
 #endif // FINDFILESDIALOG_H

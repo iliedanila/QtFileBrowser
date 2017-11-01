@@ -4,13 +4,17 @@
 #include <QDesktopWidget>
 #include <QFileDialog>
 #include <QDebug>
+#include <QKeyEvent>
+#include <QLineEdit>
+#include <QDesktopServices>
 
 FindFilesDialog::FindFilesDialog(QWidget *parent)
 :
     QDialog(parent),
     ui(new Ui::FindFilesDialog),
     processedEntries(0),
-    totalEntries(0)
+    totalEntries(0),
+    searchRunning(false)
 {
     ui->setupUi(this);
     findOperation = new FindFilesOperation(this);
@@ -33,6 +37,29 @@ void FindFilesDialog::setDirectory(const QString &aDirectory)
     findOperation->setSearchFolder(aDirectory);
 }
 
+void FindFilesDialog::focusInEvent(QFocusEvent* event)
+{
+    ui->searchForComboBox->lineEdit()->setFocus(Qt::OtherFocusReason);
+    QDialog::focusInEvent(event);
+}
+
+void FindFilesDialog::keyPressEvent(QKeyEvent* event)
+{
+    if (event->key() == Qt::Key_Return && event->modifiers() == Qt::NoModifier)
+    {
+        resultsModel->clear();
+        findOperation->start();
+    }
+    else if (event->key() == Qt::Key_Escape && event->modifiers() == Qt::NoModifier && searchRunning)
+    {
+        findOperation->cancel();
+    }
+    else
+    {
+        QDialog::keyPressEvent(event);
+    }
+}
+
 void FindFilesDialog::cancel()
 {
     findOperation->cancel();
@@ -40,24 +67,36 @@ void FindFilesDialog::cancel()
 
 void FindFilesDialog::operationStarted()
 {
+    searchRunning = true;
     ui->stackedWidget->setCurrentIndex(1);
 }
 
 void FindFilesDialog::operationFinished()
 {
+    searchRunning = false;
     ui->stackedWidget->setCurrentIndex(0);
 }
 
 void FindFilesDialog::processedEntriesCount(int count)
 {
     processedEntries = count;
-    ui->counterLabel->setText(QString::number(processedEntries) + " / " + QString::number(totalEntries));
+    ui->counterLabel->setText(QString::number(processedEntries) + " / " + QString::number(totalEntries) + " entries.");
+    auto percent = processedEntries * 100 / totalEntries;
+    ui->searchProgressBar->setValue(percent);
 }
 
 void FindFilesDialog::entriesCountChanged(int count)
 {
     totalEntries = count;
-    ui->counterLabel->setText(QString::number(processedEntries) + " / " + QString::number(totalEntries));
+    ui->counterLabel->setText(QString::number(processedEntries) + " / " + QString::number(totalEntries) + " entries.");
+    auto percent = processedEntries * 100 / totalEntries;
+    ui->searchProgressBar->setValue(percent);
+}
+
+void FindFilesDialog::openFileLocation(const QModelIndex& index) const
+{
+    QFileInfo fileInfo(resultsModel->fileName(index.row()));
+    QDesktopServices::openUrl(QUrl::fromLocalFile(fileInfo.dir().absolutePath()));
 }
 
 void FindFilesDialog::CustomizeUI()
@@ -88,6 +127,7 @@ void FindFilesDialog::Connect()
         ui->findTextComboBox->setEnabled(checked);
     });
     connect(ui->searchButton, &QPushButton::clicked, [this]{ findOperation->start(); });
+    connect(ui->searchButton, &QPushButton::clicked, resultsModel, &FindResultsModel::clear);
     connect(ui->cancelButton, &QPushButton::clicked, findOperation, &FindFilesOperation::cancel);
     connect(findOperation, &FindFilesOperation::started, this, &FindFilesDialog::operationStarted);
     connect(findOperation, &FindFilesOperation::finished, this, &FindFilesDialog::operationFinished);
@@ -95,6 +135,7 @@ void FindFilesDialog::Connect()
     connect(findOperation, &FindFilesOperation::processedEntriesCount, this, &FindFilesDialog::processedEntriesCount);
     connect(findOperation, &FindFilesOperation::foundMatch, resultsModel, &FindResultsModel::foundMatch);
     connect(ui->searchForComboBox, &QComboBox::currentTextChanged, findOperation, &FindFilesOperation::setFileName);
+    connect(ui->resultsView, &QTableView::doubleClicked, this, &FindFilesDialog::openFileLocation);
 }
 
 void FindFilesDialog::browse()

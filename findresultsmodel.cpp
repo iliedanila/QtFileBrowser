@@ -66,3 +66,10 @@ void FindResultsModel::foundMatch(QString filePath)
     resultList.push_back(filePath);
     emit layoutChanged();
 }
+
+void FindResultsModel::clear()
+{
+    emit layoutAboutToBeChanged();
+    resultList.clear();
+    emit layoutChanged();
+}

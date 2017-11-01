@@ -50,7 +50,7 @@ void FindFilesOperation::executeSearch()
 {
     int processedEntries = 0;
     QDir dir(searchFolder);
-    QFileInfoList entries = dir.entryInfoList(QDir::NoDotAndDotDot | QDir::Dirs | QDir::Files);
+    QFileInfoList entries = dir.entryInfoList(QDir::NoDotAndDotDot | QDir::Dirs | QDir::Files, QDir::DirsLast);
     int totalEntries = entries.count();
     emit entriesCountChanged(totalEntries);
 
@@ -62,7 +62,10 @@ void FindFilesOperation::executeSearch()
 
         QRegExp regExp(fileName);
         regExp.setPatternSyntax(QRegExp::Wildcard);
-        if (/*regExp.exactMatch(fileName) || */fileInfo.fileName().startsWith(fileName))
+        auto currentFileName = fileInfo.fileName();
+        auto matchReg = regExp.exactMatch(currentFileName);
+
+        if (matchReg || currentFileName.startsWith(fileName))
         {
             emit foundMatch(fileInfo.absoluteFilePath());
         }
@@ -72,8 +75,9 @@ void FindFilesOperation::executeSearch()
         if (fileInfo.isDir())
         {
             QDir folder(fileInfo.absoluteFilePath());
-            entries.append(folder.entryInfoList(QDir::NoDotAndDotDot | QDir::Dirs | QDir::Files));
-            totalEntries += entries.count();
+            auto newItems = folder.entryInfoList(QDir::NoDotAndDotDot | QDir::Dirs | QDir::Files, QDir::DirsLast);
+            entries.append(newItems);
+            totalEntries += newItems.count();
             emit entriesCountChanged(totalEntries);
         }
     }

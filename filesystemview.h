@@ -11,9 +11,9 @@ public:
     explicit FileSystemView(QWidget *parent = Q_NULLPTR);
 
 protected:
-    virtual void keyPressEvent(QKeyEvent *event) override;
-    virtual void focusInEvent(QFocusEvent *event) override;
-    virtual void resizeEvent(QResizeEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
+    void focusInEvent(QFocusEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
 
 signals:
     void switchMe();
