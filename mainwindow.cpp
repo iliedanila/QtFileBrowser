@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "fileoperation.h"
 
 #include <QDir>
 #include <QProgressDialog>
@@ -15,6 +16,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    lastActiveBrowser = ui->leftBrowser;
+    findFiles = new FindFilesDialog(this);
 
     CustomizeUI();
     Connect();
@@ -50,8 +54,7 @@ void MainWindow::CustomizeUI()
         darkTheme = textStream.readAll();
     }
 
-    ui->viewButton->setEnabled(false);
-    ui->editButton->setEnabled(false);
+    findFiles->setWindowModality(Qt::WindowModal);
     ui->leftBrowser->setFocus();
 }
 
@@ -60,21 +63,30 @@ void MainWindow::Connect()
     bool connected = true;
 
     connected &= connect(ui->leftBrowser, SIGNAL(switchMe()), this, SLOT(switchToRightBrowser())) != Q_NULLPTR;
+    connected &= connect(ui->leftBrowser, &BrowserWidget::gotFocus, [this]{ lastActiveBrowser = ui->leftBrowser;}) != Q_NULLPTR;
+    connected &= connect(ui->leftBrowser, SIGNAL(search()), this, SLOT(handleSearch())) != Q_NULLPTR;
+    connected &= connect(ui->leftBrowser, SIGNAL(copy()), this, SLOT(handleCopy())) != Q_NULLPTR;
+    connected &= connect(ui->leftBrowser, SIGNAL(move()), this, SLOT(handleMove())) != Q_NULLPTR;
+    connected &= connect(ui->leftBrowser, SIGNAL(del()), this, SLOT(handleDel())) != Q_NULLPTR;
+    connected &= connect(ui->leftBrowser, SIGNAL(newFolder()), this, SLOT(handleNewFolder())) != Q_NULLPTR;
+
     connected &= connect(ui->rightBrowser, SIGNAL(switchMe()), this, SLOT(switchToLeftBrowser())) != Q_NULLPTR;
+    connected &= connect(ui->rightBrowser, &BrowserWidget::gotFocus, [this]{ lastActiveBrowser = ui->rightBrowser;}) != Q_NULLPTR;
+    connected &= connect(ui->rightBrowser, SIGNAL(search()), this, SLOT(handleSearch())) != Q_NULLPTR;
+    connected &= connect(ui->rightBrowser, SIGNAL(copy()), this, SLOT(handleCopy())) != Q_NULLPTR;
+    connected &= connect(ui->rightBrowser, SIGNAL(move()), this, SLOT(handleMove())) != Q_NULLPTR;
+    connected &= connect(ui->rightBrowser, SIGNAL(del()), this, SLOT(handleDel())) != Q_NULLPTR;
+    connected &= connect(ui->rightBrowser, SIGNAL(newFolder()), this, SLOT(handleNewFolder())) != Q_NULLPTR;
+
     connected &= connect(ui->leftDriveButton, SIGNAL(clicked()), ui->leftBrowser, SLOT(toggleDriveMenu())) != Q_NULLPTR;
     connected &= connect(ui->rightDriveButton, SIGNAL(clicked()), ui->rightBrowser, SLOT(toggleDriveMenu())) != Q_NULLPTR;
+
+    connected &= connect(ui->searchButton, SIGNAL(clicked()), this, SLOT(handleSearch())) != Q_NULLPTR;
     connected &= connect(ui->copyButton, SIGNAL(clicked()), this, SLOT(handleCopy())) != Q_NULLPTR;
-    connected &= connect(ui->leftBrowser, SIGNAL(copy()), this, SLOT(handleCopy())) != Q_NULLPTR;
-    connected &= connect(ui->rightBrowser, SIGNAL(copy()), this, SLOT(handleCopy())) != Q_NULLPTR;
     connected &= connect(ui->moveButton, SIGNAL(clicked()), this, SLOT(handleMove())) != Q_NULLPTR;
-    connected &= connect(ui->leftBrowser, SIGNAL(move()), this, SLOT(handleMove())) != Q_NULLPTR;
-    connected &= connect(ui->rightBrowser, SIGNAL(move()), this, SLOT(handleMove())) != Q_NULLPTR;
     connected &= connect(ui->deleteButton, SIGNAL(clicked()), this, SLOT(handleDel())) != Q_NULLPTR;
-    connected &= connect(ui->leftBrowser, SIGNAL(del()), this, SLOT(handleDel())) != Q_NULLPTR;
-    connected &= connect(ui->rightBrowser, SIGNAL(del()), this, SLOT(handleDel())) != Q_NULLPTR;
     connected &= connect(ui->newFolderButton, SIGNAL(clicked()), this, SLOT(handleNewFolder())) != Q_NULLPTR;
-    connected &= connect(ui->leftBrowser, SIGNAL(newFolder()), this, SLOT(handleNewFolder())) != Q_NULLPTR;
-    connected &= connect(ui->rightBrowser, SIGNAL(newFolder()), this, SLOT(handleNewFolder())) != Q_NULLPTR;
+
     connected &= connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close())) != Q_NULLPTR;
     connected &= connect(ui->actionDark_Theme, &QAction::triggered, [this]{
         dynamic_cast<QApplication*>(QApplication::instance())->setStyleSheet(darkTheme);
@@ -86,6 +98,7 @@ void MainWindow::Connect()
         ui->actionDark_Theme->setChecked(false);
         ui->actionOS_Theme->setChecked(true);
     }) != Q_NULLPTR;
+    connected &= connect(findFiles, &FindFilesDialog::rejected, findFiles, &FindFilesDialog::cancel) != Q_NULLPTR;
 
     Q_ASSERT(connected);
 }
@@ -100,18 +113,24 @@ void MainWindow::switchToRightBrowser()
     ui->rightBrowser->setFocus();
 }
 
+void MainWindow::handleSearch()
+{
+    findFiles->setDirectory(lastActiveBrowser->getRootPath());
+    findFiles->show();
+}
+
 void MainWindow::handleCopy()
 {
     QStringList filePaths;
     QString rootFolder;
     QString destination;
-    if (ui->leftBrowser->hasFocus())
+    if (lastActiveBrowser == ui->leftBrowser)
     {
         filePaths = ui->leftBrowser->getSelected();
         rootFolder = ui->leftBrowser->getRootPath();
         destination = ui->rightBrowser->getRootPath();
     }
-    if (ui->rightBrowser->hasFocus())
+    if (lastActiveBrowser == ui->rightBrowser)
     {
         filePaths = ui->rightBrowser->getSelected();
         rootFolder = ui->rightBrowser->getRootPath();
@@ -148,10 +167,7 @@ void MainWindow::handleCopy()
         QProgressDialog* dialog = new QProgressDialog("Copy files...", "Cancel", 0, 100, this);
         dialog->setWindowModality(Qt::NonModal);
 
-        connect(copyOperation,
-                SIGNAL(setProgress(int)),
-                dialog,
-                SLOT(setValue(int)));
+        connect(copyOperation, SIGNAL(setProgress(int)), dialog, SLOT(setValue(int)));
         connect(copyOperation, SIGNAL(finished()), copyOperation, SLOT(deleteLater()));
         connect(copyOperation, SIGNAL(finished()), dialog, SLOT(close()));
         connect(dialog, SIGNAL(canceled()), copyOperation, SLOT(cancel()));
@@ -166,13 +182,13 @@ void MainWindow::handleMove()
     QStringList filePaths;
     QString rootFolder;
     QString destination;
-    if (ui->leftBrowser->hasFocus())
+    if (lastActiveBrowser == ui->leftBrowser)
     {
         filePaths = ui->leftBrowser->getSelected();
         rootFolder = ui->leftBrowser->getRootPath();
         destination = ui->rightBrowser->getRootPath();
     }
-    if (ui->rightBrowser->hasFocus())
+    if (lastActiveBrowser == ui->rightBrowser)
     {
         filePaths = ui->rightBrowser->getSelected();
         rootFolder = ui->rightBrowser->getRootPath();
@@ -209,10 +225,7 @@ void MainWindow::handleMove()
         QProgressDialog* dialog = new QProgressDialog("Move files...", "Cancel", 0, 100, this);
         dialog->setWindowModality(Qt::NonModal);
 
-        connect(moveOperation,
-                SIGNAL(setProgress(int)),
-                dialog,
-                SLOT(setValue(int)));
+        connect(moveOperation, SIGNAL(setProgress(int)), dialog, SLOT(setValue(int)));
         connect(moveOperation, SIGNAL(finished()), moveOperation, SLOT(deleteLater()));
         connect(moveOperation, SIGNAL(finished()), dialog, SLOT(close()));
         connect(dialog, SIGNAL(canceled()), moveOperation, SLOT(cancel()));
@@ -227,12 +240,12 @@ void MainWindow::handleDel()
     QStringList filePaths;
     QString rootFolder;
 
-    if (ui->leftBrowser->hasFocus())
+    if (lastActiveBrowser == ui->leftBrowser)
     {
         filePaths = ui->leftBrowser->getSelected();
         rootFolder = ui->leftBrowser->getRootPath();
     }
-    if (ui->rightBrowser->hasFocus())
+    if (lastActiveBrowser == ui->rightBrowser)
     {
         filePaths = ui->rightBrowser->getSelected();
         rootFolder = ui->rightBrowser->getRootPath();
@@ -267,10 +280,7 @@ void MainWindow::handleDel()
         QProgressDialog* dialog = new QProgressDialog("Deleting files...", "Cancel", 0, 100, this);
         dialog->setWindowModality(Qt::NonModal);
 
-        connect(delOperation,
-                SIGNAL(setProgress(int)),
-                dialog,
-                SLOT(setValue(int)));
+        connect(delOperation, SIGNAL(setProgress(int)), dialog, SLOT(setValue(int)));
         connect(delOperation, SIGNAL(finished()), delOperation, SLOT(deleteLater()));
         connect(delOperation, SIGNAL(finished()), dialog, SLOT(close()));
         connect(dialog, SIGNAL(canceled()), delOperation, SLOT(cancel()));
@@ -284,7 +294,7 @@ void MainWindow::handleDel()
 void MainWindow::handleNewFolder()
 {
     QString rootFolder;
-    if (ui->leftBrowser->hasFocus())
+    if (lastActiveBrowser == ui->leftBrowser)
     {
         rootFolder = ui->leftBrowser->getRootPath();
     }

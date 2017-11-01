@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include "fileoperation.h"
+#include "browserwidget.h"
+#include "findfilesdialog.h"
 
 namespace Ui {
     class MainWindow;
@@ -26,6 +28,7 @@ private:
 private slots:
     void switchToLeftBrowser();
     void switchToRightBrowser();
+    void handleSearch();
     void handleCopy();
     void handleMove();
     void handleDel();
@@ -35,6 +38,8 @@ private:
     Ui::MainWindow *ui;
 
     QString darkTheme;
+    BrowserWidget* lastActiveBrowser;   // no ownership.
+    FindFilesDialog* findFiles;
 };
 
 #endif // MAINWINDOW_H
