@@ -3,10 +3,10 @@
 
 #include <QDesktopWidget>
 #include <QFileDialog>
-#include <QDebug>
 #include <QKeyEvent>
-#include <QLineEdit>
 #include <QDesktopServices>
+#include <QLineEdit>
+#include <QTimer>
 
 FindFilesDialog::FindFilesDialog(QWidget *parent)
 :
@@ -19,6 +19,8 @@ FindFilesDialog::FindFilesDialog(QWidget *parent)
     ui->setupUi(this);
     findOperation = new FindFilesOperation(this);
     resultsModel = new FindResultsModel(this);
+    lineEdit = new LineEdit(ui->searchForComboBox);
+    ui->searchForComboBox->setLineEdit(lineEdit);
 
     CustomizeUI();
     Connect();
@@ -39,8 +41,8 @@ void FindFilesDialog::setDirectory(const QString &aDirectory)
 
 void FindFilesDialog::focusInEvent(QFocusEvent* event)
 {
+    Q_UNUSED(event);
     ui->searchForComboBox->lineEdit()->setFocus(Qt::OtherFocusReason);
-    QDialog::focusInEvent(event);
 }
 
 void FindFilesDialog::keyPressEvent(QKeyEvent* event)
@@ -128,13 +130,17 @@ void FindFilesDialog::Connect()
     });
     connect(ui->searchButton, &QPushButton::clicked, [this]{ findOperation->start(); });
     connect(ui->searchButton, &QPushButton::clicked, resultsModel, &FindResultsModel::clear);
+
     connect(ui->cancelButton, &QPushButton::clicked, findOperation, &FindFilesOperation::cancel);
+
     connect(findOperation, &FindFilesOperation::started, this, &FindFilesDialog::operationStarted);
     connect(findOperation, &FindFilesOperation::finished, this, &FindFilesDialog::operationFinished);
     connect(findOperation, &FindFilesOperation::entriesCountChanged, this, &FindFilesDialog::entriesCountChanged);
     connect(findOperation, &FindFilesOperation::processedEntriesCount, this, &FindFilesDialog::processedEntriesCount);
     connect(findOperation, &FindFilesOperation::foundMatch, resultsModel, &FindResultsModel::foundMatch);
+
     connect(ui->searchForComboBox, &QComboBox::currentTextChanged, findOperation, &FindFilesOperation::setFileName);
+
     connect(ui->resultsView, &QTableView::doubleClicked, this, &FindFilesDialog::openFileLocation);
 }
 

@@ -1,7 +1,6 @@
 #include "browserwidget.h"
 #include "ui_browserWidget.h"
 
-#include <QDebug>
 #include <QDir>
 #include <QDirModel>
 #include <QStorageInfo>
@@ -125,7 +124,7 @@ void BrowserWidget::Connect()
     connect(driveTimer, &QTimer::timeout, this, &BrowserWidget::populateDriveList);
 }
 
-void BrowserWidget::SelectFirstRow(bool directoryChanged)
+void BrowserWidget::SelectFirstRow(const bool directoryChanged) const
 {
     if (directoryChanged ||
         ui->fileSystemView->selectionModel()->selection().indexes().count() == 0)

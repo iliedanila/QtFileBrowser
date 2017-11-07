@@ -117,6 +117,7 @@ void MainWindow::handleSearch()
 {
     findFiles->setDirectory(lastActiveBrowser->getRootPath());
     findFiles->show();
+    findFiles->setFocus(Qt::OtherFocusReason);
 }
 
 void MainWindow::handleCopy()

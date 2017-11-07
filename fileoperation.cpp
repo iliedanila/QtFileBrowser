@@ -1,6 +1,5 @@
 #include "fileoperation.h"
 
-#include <QFileInfo>
 #include <QFile>
 #include <QDir>
 

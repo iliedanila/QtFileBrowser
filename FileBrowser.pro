@@ -33,7 +33,8 @@ SOURCES += \
     fileoperation.cpp \
     findfilesdialog.cpp \
     findfilesoperation.cpp \
-    findresultsmodel.cpp
+    findresultsmodel.cpp \
+    lineedit.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -43,7 +44,8 @@ HEADERS += \
     fileoperation.h \
     findfilesdialog.h \
     findfilesoperation.h \
-    findresultsmodel.h
+    findresultsmodel.h \
+    lineedit.h
 
 FORMS += \
         mainwindow.ui \

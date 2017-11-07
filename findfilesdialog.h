@@ -5,6 +5,7 @@
 
 #include "findfilesoperation.h"
 #include "findresultsmodel.h"
+#include "lineedit.h"
 
 namespace Ui {
 class FindFilesDialog;
@@ -42,6 +43,7 @@ private:
     Ui::FindFilesDialog *ui;
     FindFilesOperation* findOperation;
     FindResultsModel* resultsModel;
+    LineEdit* lineEdit;
     int processedEntries;
     int totalEntries;
     bool searchRunning;

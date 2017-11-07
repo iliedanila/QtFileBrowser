@@ -3,7 +3,6 @@
 
 #include <QWidget>
 #include <QFileSystemWatcher>
-#include <QFileIconProvider>
 #include <QTimer>
 #include <QCompleter>
 #include <QDirModel>
@@ -28,7 +27,7 @@ public:
 private:
     void CustomizeUI();
     void Connect();
-    void SelectFirstRow(bool directoryChanged);
+    void SelectFirstRow(bool directoryChanged) const;
 
 signals:
     void switchMe();
