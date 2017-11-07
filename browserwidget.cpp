@@ -12,6 +12,7 @@
 #include <QMenu>
 #include <QSignalMapper>
 #include <QDebug>
+#include <QtGlobal>
 
 BrowserWidget::BrowserWidget(QWidget *parent) :
     QWidget(parent),
@@ -102,30 +103,26 @@ void BrowserWidget::CustomizeUI()
 
 void BrowserWidget::Connect()
 {
-    bool connected = true;
+    connect(ui->fileSystemView, &FileSystemView::doubleClicked, this, &BrowserWidget::open);
+    connect(ui->fileSystemView, &FileSystemView::switchMe, this, &BrowserWidget::handleSwitchMeRequest);
+    connect(ui->fileSystemView, &FileSystemView::gotFocus, this, &BrowserWidget::handleGotFocus);
+    connect(ui->fileSystemView, &FileSystemView::goToParent, this, &BrowserWidget::goToParent);
+    connect(ui->fileSystemView, &FileSystemView::search, this, &BrowserWidget::search);
+    connect(ui->fileSystemView, &FileSystemView::copy, this, &BrowserWidget::copy);
+    connect(ui->fileSystemView, &FileSystemView::move, this, &BrowserWidget::move);
+    connect(ui->fileSystemView, &FileSystemView::del, this, &BrowserWidget::del);
+    connect(ui->fileSystemView, &FileSystemView::newFolder, this, &BrowserWidget::newFolder);
+    connect(ui->fileSystemView, &FileSystemView::customContextMenuRequested, this, &BrowserWidget::customContextMenuRequested);
 
-    connected &= connect(ui->fileSystemView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(open(QModelIndex))) != Q_NULLPTR;
-    connected &= connect(ui->fileSystemView, SIGNAL(switchMe()), this, SLOT(handleSwitchMeRequest())) != Q_NULLPTR;
-    connected &= connect(ui->fileSystemView, SIGNAL(gotFocus()), this, SLOT(handleGotFocus())) != Q_NULLPTR;
-    connected &= connect(ui->fileSystemView, SIGNAL(goToParent()), this, SLOT(goToParent())) != Q_NULLPTR;
-    connected &= connect(ui->fileSystemView, SIGNAL(search()), this, SIGNAL(search())) != Q_NULLPTR;
-    connected &= connect(ui->fileSystemView, SIGNAL(copy()), this, SIGNAL(copy())) != Q_NULLPTR;
-    connected &= connect(ui->fileSystemView, SIGNAL(move()), this, SIGNAL(move())) != Q_NULLPTR;
-    connected &= connect(ui->fileSystemView, SIGNAL(del()), this, SIGNAL(del())) != Q_NULLPTR;
-    connected &= connect(ui->fileSystemView, SIGNAL(newFolder()), this, SIGNAL(newFolder())) != Q_NULLPTR;
-    connected &= connect(ui->fileSystemView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(customContextMenuRequested(QPoint))) != Q_NULLPTR;
+    connect(ui->homeButton, &QToolButton::clicked, this, &BrowserWidget::setHome);
+    connect(ui->driveList, qOverload<const QString&>(&QComboBox::currentIndexChanged), this, &BrowserWidget::setPath);
+    connect(ui->currentPath, &QLineEdit::textChanged, this, &BrowserWidget::setPath);
+    connect(ui->showHiddenFilesButton, &QRadioButton::toggled, this, &BrowserWidget::showHiddenFiles);
 
-    connected &= connect(ui->homeButton, SIGNAL(clicked()), this, SLOT(setHome())) != Q_NULLPTR;
-    connected &= connect(ui->driveList, SIGNAL(currentIndexChanged(QString)), this, SLOT(setPath(QString))) != Q_NULLPTR;
-    connected &= connect(ui->currentPath, SIGNAL(textChanged(QString)), this, SLOT(setPath(QString))) != Q_NULLPTR;
-    connected &= connect(ui->showHiddenFilesButton, SIGNAL(toggled(bool)), this, SLOT(showHiddenFiles(bool))) != Q_NULLPTR;
+    connect(fileSystemModel, &FileSystemModel::directoryLoaded, this, &BrowserWidget::handleRootPathChanged);
+    connect(fileSystemModel, &FileSystemModel::directoryLoaded, this, &BrowserWidget::matchDriveToPath);
 
-    connected &= connect(fileSystemModel, SIGNAL(directoryLoaded(QString)), this, SLOT(handleRootPathChanged(QString))) != Q_NULLPTR;
-    connected &= connect(fileSystemModel, SIGNAL(directoryLoaded(QString)), this, SLOT(matchDriveToPath(QString))) != Q_NULLPTR;
-
-    connected &= connect(driveTimer, SIGNAL(timeout()), this, SLOT(populateDriveList())) != Q_NULLPTR;
-
-    Q_ASSERT(connected);
+    connect(driveTimer, &QTimer::timeout, this, &BrowserWidget::populateDriveList);
 }
 
 void BrowserWidget::SelectFirstRow(bool directoryChanged)
