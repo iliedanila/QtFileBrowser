@@ -115,7 +115,7 @@ void BrowserWidget::Connect()
     connect(ui->fileSystemView, &FileSystemView::customContextMenuRequested, this, &BrowserWidget::customContextMenuRequested);
 
     connect(ui->homeButton, &QToolButton::clicked, this, &BrowserWidget::setHome);
-    connect(ui->driveList, qOverload<const QString&>(&QComboBox::currentIndexChanged), this, &BrowserWidget::setPath);
+    connect(ui->driveList, QOverload<const QString&>::of(&QComboBox::currentIndexChanged), this, &BrowserWidget::setPath);
     connect(ui->currentPath, &QLineEdit::textChanged, this, &BrowserWidget::setPath);
     connect(ui->showHiddenFilesButton, &QRadioButton::toggled, this, &BrowserWidget::showHiddenFiles);
 
