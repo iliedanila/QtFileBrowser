@@ -54,6 +54,7 @@ void MainWindow::CustomizeUI()
         darkTheme = textStream.readAll();
     }
 
+    ui->openButton->setEnabled(false);
     findFiles->setWindowModality(Qt::WindowModal);
     ui->leftBrowser->setFocus();
 }
