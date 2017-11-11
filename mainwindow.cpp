@@ -61,47 +61,45 @@ void MainWindow::CustomizeUI()
 
 void MainWindow::Connect()
 {
-    bool connected = true;
+    connect(ui->leftBrowser, &BrowserWidget::switchMe, this, &MainWindow::switchToRightBrowser);
+    connect(ui->leftBrowser, &BrowserWidget::gotFocus, [this]{ lastActiveBrowser = ui->leftBrowser;});
+    connect(ui->leftBrowser, &BrowserWidget::search, this, &MainWindow::handleSearch);
+    connect(ui->leftBrowser, &BrowserWidget::copy, this, &MainWindow::handleCopy);
+    connect(ui->leftBrowser, &BrowserWidget::move, this, &MainWindow::handleMove);
+    connect(ui->leftBrowser, &BrowserWidget::del, this, &MainWindow::handleDel);
+    connect(ui->leftBrowser, &BrowserWidget::newFolder, this, &MainWindow::handleNewFolder);
 
-    connected &= connect(ui->leftBrowser, SIGNAL(switchMe()), this, SLOT(switchToRightBrowser())) != Q_NULLPTR;
-    connected &= connect(ui->leftBrowser, &BrowserWidget::gotFocus, [this]{ lastActiveBrowser = ui->leftBrowser;}) != Q_NULLPTR;
-    connected &= connect(ui->leftBrowser, SIGNAL(search()), this, SLOT(handleSearch())) != Q_NULLPTR;
-    connected &= connect(ui->leftBrowser, SIGNAL(copy()), this, SLOT(handleCopy())) != Q_NULLPTR;
-    connected &= connect(ui->leftBrowser, SIGNAL(move()), this, SLOT(handleMove())) != Q_NULLPTR;
-    connected &= connect(ui->leftBrowser, SIGNAL(del()), this, SLOT(handleDel())) != Q_NULLPTR;
-    connected &= connect(ui->leftBrowser, SIGNAL(newFolder()), this, SLOT(handleNewFolder())) != Q_NULLPTR;
+    connect(ui->rightBrowser, &BrowserWidget::switchMe, this, &MainWindow::switchToLeftBrowser);
+    connect(ui->rightBrowser, &BrowserWidget::gotFocus, [this]{ lastActiveBrowser = ui->rightBrowser;});
+    connect(ui->rightBrowser, &BrowserWidget::search, this, &MainWindow::handleSearch);
+    connect(ui->rightBrowser, &BrowserWidget::copy, this, &MainWindow::handleCopy);
+    connect(ui->rightBrowser, &BrowserWidget::move, this, &MainWindow::handleMove);
+    connect(ui->rightBrowser, &BrowserWidget::del, this, &MainWindow::handleDel);
+    connect(ui->rightBrowser, &BrowserWidget::newFolder, this, &MainWindow::handleNewFolder);
 
-    connected &= connect(ui->rightBrowser, SIGNAL(switchMe()), this, SLOT(switchToLeftBrowser())) != Q_NULLPTR;
-    connected &= connect(ui->rightBrowser, &BrowserWidget::gotFocus, [this]{ lastActiveBrowser = ui->rightBrowser;}) != Q_NULLPTR;
-    connected &= connect(ui->rightBrowser, SIGNAL(search()), this, SLOT(handleSearch())) != Q_NULLPTR;
-    connected &= connect(ui->rightBrowser, SIGNAL(copy()), this, SLOT(handleCopy())) != Q_NULLPTR;
-    connected &= connect(ui->rightBrowser, SIGNAL(move()), this, SLOT(handleMove())) != Q_NULLPTR;
-    connected &= connect(ui->rightBrowser, SIGNAL(del()), this, SLOT(handleDel())) != Q_NULLPTR;
-    connected &= connect(ui->rightBrowser, SIGNAL(newFolder()), this, SLOT(handleNewFolder())) != Q_NULLPTR;
+    connect(ui->leftDriveButton, &QPushButton::clicked, ui->leftBrowser, &BrowserWidget::toggleDriveMenu);
+    connect(ui->rightDriveButton, &QPushButton::clicked, ui->rightBrowser, &BrowserWidget::toggleDriveMenu);
 
-    connected &= connect(ui->leftDriveButton, SIGNAL(clicked()), ui->leftBrowser, SLOT(toggleDriveMenu())) != Q_NULLPTR;
-    connected &= connect(ui->rightDriveButton, SIGNAL(clicked()), ui->rightBrowser, SLOT(toggleDriveMenu())) != Q_NULLPTR;
+    connect(ui->searchButton, &QPushButton::clicked, this, &MainWindow::handleSearch);
+    connect(ui->copyButton, &QPushButton::clicked, this, &MainWindow::handleCopy);
+    connect(ui->moveButton, &QPushButton::clicked, this, &MainWindow::handleMove);
+    connect(ui->deleteButton, &QPushButton::clicked, this, &MainWindow::handleDel);
+    connect(ui->newFolderButton, &QPushButton::clicked, this, &MainWindow::handleNewFolder);
 
-    connected &= connect(ui->searchButton, SIGNAL(clicked()), this, SLOT(handleSearch())) != Q_NULLPTR;
-    connected &= connect(ui->copyButton, SIGNAL(clicked()), this, SLOT(handleCopy())) != Q_NULLPTR;
-    connected &= connect(ui->moveButton, SIGNAL(clicked()), this, SLOT(handleMove())) != Q_NULLPTR;
-    connected &= connect(ui->deleteButton, SIGNAL(clicked()), this, SLOT(handleDel())) != Q_NULLPTR;
-    connected &= connect(ui->newFolderButton, SIGNAL(clicked()), this, SLOT(handleNewFolder())) != Q_NULLPTR;
-
-    connected &= connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close())) != Q_NULLPTR;
-    connected &= connect(ui->actionDark_Theme, &QAction::triggered, [this]{
+    connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::close);
+    connect(ui->actionDark_Theme, &QAction::triggered, [this]
+    {
         dynamic_cast<QApplication*>(QApplication::instance())->setStyleSheet(darkTheme);
         ui->actionDark_Theme->setChecked(true);
         ui->actionOS_Theme->setChecked(false);
-    }) != Q_NULLPTR;
-    connected &= connect(ui->actionOS_Theme, &QAction::triggered, [this]{
+    });
+    connect(ui->actionOS_Theme, &QAction::triggered, [this]
+    {
         dynamic_cast<QApplication*>(QApplication::instance())->setStyleSheet("");
         ui->actionDark_Theme->setChecked(false);
         ui->actionOS_Theme->setChecked(true);
-    }) != Q_NULLPTR;
-    connected &= connect(findFiles, &FindFilesDialog::rejected, findFiles, &FindFilesDialog::cancel) != Q_NULLPTR;
-
-    Q_ASSERT(connected);
+    });
+    connect(findFiles, &FindFilesDialog::rejected, findFiles, &FindFilesDialog::cancel);
 }
 
 void MainWindow::switchToLeftBrowser()
@@ -169,10 +167,10 @@ void MainWindow::handleCopy()
         QProgressDialog* dialog = new QProgressDialog("Copy files...", "Cancel", 0, 100, this);
         dialog->setWindowModality(Qt::NonModal);
 
-        connect(copyOperation, SIGNAL(setProgress(int)), dialog, SLOT(setValue(int)));
-        connect(copyOperation, SIGNAL(finished()), copyOperation, SLOT(deleteLater()));
-        connect(copyOperation, SIGNAL(finished()), dialog, SLOT(close()));
-        connect(dialog, SIGNAL(canceled()), copyOperation, SLOT(cancel()));
+        connect(copyOperation, &FileOperation::setProgress, dialog, &QProgressDialog::setValue);
+        connect(copyOperation, &FileOperation::finished, copyOperation, &FileOperation::deleteLater);
+        connect(copyOperation, &FileOperation::finished, dialog, &QProgressDialog::close);
+        connect(dialog, &QProgressDialog::canceled, copyOperation, &FileOperation::cancel);
 
         copyOperation->start();
         dialog->show();
@@ -227,10 +225,10 @@ void MainWindow::handleMove()
         QProgressDialog* dialog = new QProgressDialog("Move files...", "Cancel", 0, 100, this);
         dialog->setWindowModality(Qt::NonModal);
 
-        connect(moveOperation, SIGNAL(setProgress(int)), dialog, SLOT(setValue(int)));
-        connect(moveOperation, SIGNAL(finished()), moveOperation, SLOT(deleteLater()));
-        connect(moveOperation, SIGNAL(finished()), dialog, SLOT(close()));
-        connect(dialog, SIGNAL(canceled()), moveOperation, SLOT(cancel()));
+        connect(moveOperation, &FileOperation::setProgress, dialog, &QProgressDialog::setValue);
+        connect(moveOperation, &FileOperation::finished, moveOperation, &FileOperation::deleteLater);
+        connect(moveOperation, &FileOperation::finished, dialog, &QProgressDialog::close);
+        connect(dialog, &QProgressDialog::canceled, moveOperation, &FileOperation::cancel);
 
         moveOperation->start();
         dialog->show();
@@ -282,10 +280,10 @@ void MainWindow::handleDel()
         QProgressDialog* dialog = new QProgressDialog("Deleting files...", "Cancel", 0, 100, this);
         dialog->setWindowModality(Qt::NonModal);
 
-        connect(delOperation, SIGNAL(setProgress(int)), dialog, SLOT(setValue(int)));
-        connect(delOperation, SIGNAL(finished()), delOperation, SLOT(deleteLater()));
-        connect(delOperation, SIGNAL(finished()), dialog, SLOT(close()));
-        connect(dialog, SIGNAL(canceled()), delOperation, SLOT(cancel()));
+        connect(delOperation, &FileOperation::setProgress, dialog, &QProgressDialog::setValue);
+        connect(delOperation, &FileOperation::finished, delOperation, &FileOperation::deleteLater);
+        connect(delOperation, &FileOperation::finished, dialog, &QProgressDialog::close);
+        connect(dialog, &QProgressDialog::canceled, delOperation, &FileOperation::cancel);
 
         delOperation->start();
         dialog->show();

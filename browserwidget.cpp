@@ -9,7 +9,6 @@
 #include <QAbstractItemView>
 #include <QHeaderView>
 #include <QMenu>
-#include <QSignalMapper>
 #include <QDebug>
 #include <QtGlobal>
 
